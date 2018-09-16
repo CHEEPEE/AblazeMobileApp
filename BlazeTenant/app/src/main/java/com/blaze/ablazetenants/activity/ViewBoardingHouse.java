@@ -3,6 +3,10 @@ package com.blaze.ablazetenants.activity;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearSnapHelper;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,12 +15,17 @@ import android.widget.TextView;
 import com.blaze.ablazetenants.R;
 import com.blaze.ablazetenants.appModule.GlideApp;
 import com.blaze.ablazetenants.objectModels.BoardingHouseProfileObjectModel;
+import com.blaze.ablazetenants.objectModels.GalleryObjectModel;
 import com.blaze.ablazetenants.objectModels.GeneralInformationObjectModel;
+import com.blaze.ablazetenants.views.GalleryRecyclerViewAdapter;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
@@ -25,6 +34,9 @@ public class ViewBoardingHouse extends AppCompatActivity {
     TextView bhouseName,priceVal,spaceVal,capacityVal,waterBill,electBill,onwerNumber;
     ImageView app_bar_image;
     Context context;
+    RecyclerView imageGalList;
+    GalleryRecyclerViewAdapter galleryRecyclerViewAdapter;
+    ArrayList<GalleryObjectModel> galleryObjectModelArrayList = new ArrayList<>();
 
     FirebaseFirestore ref;
     @Override
@@ -42,7 +54,7 @@ public class ViewBoardingHouse extends AppCompatActivity {
         waterBill = (TextView) findViewById(R.id.waterbill);
         electBill = (TextView) findViewById(R.id.electBill);
         onwerNumber = (TextView) findViewById(R.id.onwerNumber);
-
+        imageGalList = (RecyclerView) findViewById(R.id.galList);
         ref.collection("houseProfiles").document(key).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
@@ -103,6 +115,31 @@ public class ViewBoardingHouse extends AppCompatActivity {
                         }
                     }
                 });
+        getGallery();
 
+    }
+    void  getGallery(){
+        galleryRecyclerViewAdapter = new GalleryRecyclerViewAdapter(context,galleryObjectModelArrayList,key);
+        imageGalList.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.HORIZONTAL));
+        imageGalList.setAdapter(galleryRecyclerViewAdapter);
+        ref.collection("imageGallery")
+                .whereEqualTo("businessId",key)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+
+                            return;
+                        }
+                        galleryObjectModelArrayList.clear();
+                        for (DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()) {
+                            GalleryObjectModel galleryObjectModel = dc.toObject(GalleryObjectModel.class);
+                            galleryObjectModelArrayList.add(galleryObjectModel);
+                        }
+                        galleryRecyclerViewAdapter.notifyDataSetChanged();
+                    }
+                });
+        SnapHelper snapHelper = new LinearSnapHelper();
+        snapHelper.attachToRecyclerView(imageGalList);
     }
 }

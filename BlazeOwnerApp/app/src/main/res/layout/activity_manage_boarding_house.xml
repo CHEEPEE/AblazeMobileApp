@@ -28,12 +28,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <ImageView
-                    android:background="@color/colorAccent"
+                    android:background="#fff"
                     android:id="@+id/app_bar_image"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/logo"
+
                     android:scaleType="centerCrop" />
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/image_transp_grad"
+                    ></android.support.constraint.ConstraintLayout>
+
 
                 <ImageView
                     android:layout_width="wrap_content"

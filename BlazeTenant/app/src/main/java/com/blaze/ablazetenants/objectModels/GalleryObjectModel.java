@@ -1,4 +1,4 @@
-package icandoallthingsthroughchrist10.blazeownerapp.objectModel;
+package com.blaze.ablazetenants.objectModels;
 
 /**
  * Created by Keji's Lab on 26/11/2017.
@@ -13,7 +13,7 @@ public class GalleryObjectModel {
     public GalleryObjectModel(){
 
     }
-    public GalleryObjectModel(String businessId,String imageUrl,String key
+    public GalleryObjectModel(String businessId, String imageUrl, String key
     ){
         this.businessId = businessId;
         this.imageUrl = imageUrl;

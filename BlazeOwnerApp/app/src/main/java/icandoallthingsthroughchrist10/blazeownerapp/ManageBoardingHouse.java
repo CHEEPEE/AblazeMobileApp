@@ -14,6 +14,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearSnapHelper;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +43,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -48,13 +53,16 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Nullable;
 
 import icandoallthingsthroughchrist10.blazeownerapp.objectModel.BoardingHouseProfileObjectModel;
+import icandoallthingsthroughchrist10.blazeownerapp.objectModel.GalleryObjectModel;
 import icandoallthingsthroughchrist10.blazeownerapp.objectModel.GeneralInformationObjectModel;
+import icandoallthingsthroughchrist10.blazeownerapp.views.GalleryRecyclerViewAdapter;
 
 public class ManageBoardingHouse extends AppCompatActivity {
     private static final int READ_REQUEST_CODE = 42;
@@ -63,11 +71,15 @@ public class ManageBoardingHouse extends AppCompatActivity {
     boolean imageSet = false;
     Uri bannerUri;
     ImageView roomPhoto;
-
+    String businessKey;
     FirebaseAuth auth;
     FirebaseFirestore db;
     TextView name,owner,address,mail,number,status,setting,priceVal, spaceVal,capacityVal,manageGallery;
     Context context;
+    RecyclerView imageGalList;
+    GalleryRecyclerViewAdapter galleryRecyclerViewAdapter;
+    ArrayList<GalleryObjectModel> galleryObjectModelArrayList = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +99,10 @@ public class ManageBoardingHouse extends AppCompatActivity {
         spaceVal = (TextView) findViewById(R.id.spaceVal);
         capacityVal = (TextView) findViewById(R.id.capacityVal);
         manageGallery = (TextView) findViewById(R.id.manageGallery);
+        imageGalList = (RecyclerView) findViewById(R.id.imageGalList);
+
+
+
 
 
         db.collection("houseProfiles").document(auth.getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -99,6 +115,8 @@ public class ManageBoardingHouse extends AppCompatActivity {
                 mail.setText(object.getEmail());
                 number.setText(object.getContactNumber());
                 status.setText((object.getStatus().equals("pending"))? "Pending Approval": object.getStatus());
+                businessKey = object.getUserId();
+                getGallery();
             }
         });
         setting.setOnClickListener(new View.OnClickListener() {
@@ -125,14 +143,42 @@ public class ManageBoardingHouse extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(context,ManageGallery.class);
+                i.putExtra("key",businessKey);
                 startActivity(i);
             }
         });
+
+
 
         setAppBarImage();
         getGeneralInfo();
 
 
+    }
+
+    void  getGallery(){
+        galleryRecyclerViewAdapter = new GalleryRecyclerViewAdapter(context,galleryObjectModelArrayList,businessKey);
+        imageGalList.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.HORIZONTAL));
+        imageGalList.setAdapter(galleryRecyclerViewAdapter);
+        db.collection("imageGallery")
+                .whereEqualTo("businessId",businessKey)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+
+                            return;
+                        }
+                        galleryObjectModelArrayList.clear();
+                        for (DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()) {
+                            GalleryObjectModel galleryObjectModel = dc.toObject(GalleryObjectModel.class);
+                            galleryObjectModelArrayList.add(galleryObjectModel);
+                        }
+                        galleryRecyclerViewAdapter.notifyDataSetChanged();
+                    }
+                });
+        SnapHelper snapHelper = new LinearSnapHelper();
+        snapHelper.attachToRecyclerView(imageGalList);
     }
     void getGeneralInfo(){
         FirebaseFirestore.getInstance().collection("generalInformation").document(auth.getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {

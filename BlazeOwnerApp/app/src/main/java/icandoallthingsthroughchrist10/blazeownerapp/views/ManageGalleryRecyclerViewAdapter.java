@@ -7,8 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-
-
 import java.util.ArrayList;
 
 import icandoallthingsthroughchrist10.blazeownerapp.GlideApp;
@@ -19,8 +17,8 @@ import icandoallthingsthroughchrist10.blazeownerapp.objectModel.GalleryObjectMod
  * Created by Keji's Lab on 19/01/2018.
  */
 
-public class GalleryRecyclerViewAdapter
-        extends RecyclerView.Adapter<GalleryRecyclerViewAdapter.MyViewHolder> {
+public class ManageGalleryRecyclerViewAdapter
+        extends RecyclerView.Adapter<ManageGalleryRecyclerViewAdapter.MyViewHolder> {
     private ArrayList<GalleryObjectModel> galleryDataModelArrayList = new ArrayList<>();
     private Context context;
     private String categoryKey;
@@ -33,11 +31,10 @@ public class GalleryRecyclerViewAdapter
         public MyViewHolder(View view){
             super(view);
             galleryImage = (ImageView) view.findViewById(R.id.image);
-
         }
     }
 
-    public GalleryRecyclerViewAdapter(Context c, ArrayList<GalleryObjectModel> galleryDataModels, String businessKey){
+    public ManageGalleryRecyclerViewAdapter(Context c, ArrayList<GalleryObjectModel> galleryDataModels, String businessKey){
         this.context = c;
         this.galleryDataModelArrayList = galleryDataModels;
         this.businessKey = businessKey;
@@ -45,7 +42,7 @@ public class GalleryRecyclerViewAdapter
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image_gallery,parent,false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image_gallery_manage,parent,false);
 
         return new MyViewHolder(itemView);
     }

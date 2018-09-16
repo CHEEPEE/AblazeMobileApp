@@ -1,4 +1,4 @@
-package icandoallthingsthroughchrist10.blazeownerapp.views;
+package com.blaze.ablazetenants.views;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,13 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-
+import com.blaze.ablazetenants.R;
+import com.blaze.ablazetenants.appModule.GlideApp;
+import com.blaze.ablazetenants.objectModels.GalleryObjectModel;
 
 import java.util.ArrayList;
 
-import icandoallthingsthroughchrist10.blazeownerapp.GlideApp;
-import icandoallthingsthroughchrist10.blazeownerapp.R;
-import icandoallthingsthroughchrist10.blazeownerapp.objectModel.GalleryObjectModel;
+
 
 /**
  * Created by Keji's Lab on 19/01/2018.
@@ -45,7 +45,7 @@ public class GalleryRecyclerViewAdapter
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image_gallery,parent,false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image_gallery_v2,parent,false);
 
         return new MyViewHolder(itemView);
     }
