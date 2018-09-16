@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "353744476046",
+    "firebase_url": "https://blaze-5155c.firebaseio.com",
+    "project_id": "blaze-5155c",
+    "storage_bucket": "blaze-5155c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:353744476046:android:58fdc67e2e2bc773",
+        "android_client_info": {
+          "package_name": "icandoallthingsthroughchrist10.blazeownerapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "353744476046-l3t4lbq2iqqpi491u9nns7gei702frob.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "icandoallthingsthroughchrist10.blazeownerapp",
+            "certificate_hash": "7c459a08b1abaca944ad265fe7cba80b03505d2c"
+          }
+        },
+        {
+          "client_id": "353744476046-q9a882ku0r7k2ni0o58sbs1l6s011miu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4oA5SYmC3FXSvRWe3AW3yYcmVWB96C2E"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "353744476046-q9a882ku0r7k2ni0o58sbs1l6s011miu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
