@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  */
 
 public class BoardingHouseListRecyclerViewAdapter extends RecyclerView.Adapter<BoardingHouseListRecyclerViewAdapter.MyViewHolder> {
-   private ArrayList<BoardingHouseProfileObjectModel> boardingHouseProfileObjectModels = new ArrayList<>();
+   private ArrayList<GeneralInformationObjectModel> generalInformationObjectModelArrayList = new ArrayList<>();
    private Context context;
    int active = 0;
 
@@ -54,9 +54,9 @@ public class BoardingHouseListRecyclerViewAdapter extends RecyclerView.Adapter<B
         }
     }
 
-    public BoardingHouseListRecyclerViewAdapter(Context c, ArrayList<BoardingHouseProfileObjectModel> announcementCategoryDataModals){
+    public BoardingHouseListRecyclerViewAdapter(Context c, ArrayList<GeneralInformationObjectModel> generalInformationObjectModels){
     this.context = c;
-    this.boardingHouseProfileObjectModels = announcementCategoryDataModals;
+    this.generalInformationObjectModelArrayList = generalInformationObjectModels;
 
     }
 
@@ -69,59 +69,49 @@ public class BoardingHouseListRecyclerViewAdapter extends RecyclerView.Adapter<B
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        final BoardingHouseProfileObjectModel boardingHouseProfileObjectModel = boardingHouseProfileObjectModels.get(position);
-        holder.bHouseName.setText(boardingHouseProfileObjectModel.getName());
+        final GeneralInformationObjectModel generalInformationObjectModel = generalInformationObjectModelArrayList.get(position);
 
-        FirebaseFirestore.getInstance()
-                .collection("imageBanner")
-                .document(boardingHouseProfileObjectModel.getUserId())
-                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-               try {
-                   GlideApp.with(context)
-                           .load(documentSnapshot.getData().get("imageBanner"))
-                           .diskCacheStrategy(DiskCacheStrategy.ALL).centerCrop()
-                           .into(holder.imageBanner);
-               }catch (NullPointerException ex){
 
-               }
-            }
-        });
-
+        holder.price.setText("Php "+generalInformationObjectModel.getPrice()+"");
+        holder.space.setText("Space Available: "+generalInformationObjectModel.getAvailable()+"");
         holder.viewBHouse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(context, ViewBoardingHouse.class);
-                i.putExtra("key",boardingHouseProfileObjectModel.getUserId());
+                i.putExtra("key",generalInformationObjectModel.getUserId());
                 context.startActivity(i);
             }
         });
 
-        FirebaseFirestore.getInstance()
-                .collection("generalInformation")
-                .document(boardingHouseProfileObjectModel.getUserId()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        FirebaseFirestore.getInstance().collection("houseProfiles")
+                .document(generalInformationObjectModel.getUserId()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                GeneralInformationObjectModel generalInformationObjectModel = documentSnapshot.toObject(GeneralInformationObjectModel.class);
-                if (e != null) {
-                    Log.w("generalInformation", "Listen failed.", e);
-                    return;
-                }else {
-                  try {
-                      holder.price.setText("Php "+generalInformationObjectModel.getPrice()+"");
-                      holder.space.setText("Space Available: "+generalInformationObjectModel.getAvailable()+"");
-                  }catch (NullPointerException ex){
-                      holder.price.setText("N/A");
-                      holder.space.setText("N/A");
-                  }
-                }
+                 BoardingHouseProfileObjectModel houseProfileObjectModel = documentSnapshot.toObject(BoardingHouseProfileObjectModel.class);
+                 holder.bHouseName.setText(houseProfileObjectModel.getName());
+
             }
         });
+        FirebaseFirestore.getInstance()
+                .collection("imageBanner")
+                .document(generalInformationObjectModel.getUserId())
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                        try {
+                            GlideApp.with(context)
+                                    .load(documentSnapshot.getData().get("imageBanner"))
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL).centerCrop()
+                                    .into(holder.imageBanner);
+                        }catch (NullPointerException ex){
+
+                        }
+                    }
+                });
     }
     @Override
     public int getItemCount() {
-        return boardingHouseProfileObjectModels.size();
+        return generalInformationObjectModelArrayList.size();
     }
 
     public interface OnItemClickLitener {

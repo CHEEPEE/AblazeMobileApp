@@ -1,5 +1,7 @@
 package icandoallthingsthroughchrist10.blazeownerapp.objectModel;
 
+import java.util.Map;
+
 /**
  * Created by Keji's Lab on 26/11/2017.
  */
@@ -67,5 +69,6 @@ public class BoardingHouseProfileObjectModel {
     public String getStatus() {
         return status;
     }
+
 
 }

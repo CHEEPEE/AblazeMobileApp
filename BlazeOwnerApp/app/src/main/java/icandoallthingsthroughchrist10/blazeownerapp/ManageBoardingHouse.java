@@ -108,15 +108,19 @@ public class ManageBoardingHouse extends AppCompatActivity {
         db.collection("houseProfiles").document(auth.getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                BoardingHouseProfileObjectModel object = documentSnapshot.toObject(BoardingHouseProfileObjectModel.class);
-                name.setText(object.getName());
-                owner.setText(object.getOwner());
-                address.setText(object.getAddress());
-                mail.setText(object.getEmail());
-                number.setText(object.getContactNumber());
-                status.setText((object.getStatus().equals("pending"))? "Pending Approval": object.getStatus());
-                businessKey = object.getUserId();
-                getGallery();
+               try {
+                   BoardingHouseProfileObjectModel object = documentSnapshot.toObject(BoardingHouseProfileObjectModel.class);
+                   name.setText(object.getName());
+                   owner.setText(object.getOwner());
+                   address.setText(object.getAddress());
+                   mail.setText(object.getEmail());
+                   number.setText(object.getContactNumber());
+                   status.setText((object.getStatus().equals("pending"))? "Pending Approval": object.getStatus());
+                   businessKey = object.getUserId();
+                   getGallery();
+               }catch (NullPointerException ex){
+
+               }
             }
         });
         setting.setOnClickListener(new View.OnClickListener() {
@@ -329,10 +333,6 @@ public class ManageBoardingHouse extends AppCompatActivity {
                 });
             }
         });
-
-
-
-
     }
 
     public void performFileSearch() {
