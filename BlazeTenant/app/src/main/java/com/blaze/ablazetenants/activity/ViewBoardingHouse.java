@@ -1,6 +1,12 @@
 package com.blaze.ablazetenants.activity;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearSnapHelper;
@@ -37,6 +43,8 @@ public class ViewBoardingHouse extends AppCompatActivity {
     RecyclerView imageGalList;
     GalleryRecyclerViewAdapter galleryRecyclerViewAdapter;
     ArrayList<GalleryObjectModel> galleryObjectModelArrayList = new ArrayList<>();
+    String numberToCall;
+    BoardingHouseProfileObjectModel boardingHouseProfileObjectModel;
 
     FirebaseFirestore ref;
     @Override
@@ -58,7 +66,7 @@ public class ViewBoardingHouse extends AppCompatActivity {
         ref.collection("houseProfiles").document(key).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                BoardingHouseProfileObjectModel boardingHouseProfileObjectModel = documentSnapshot.toObject(BoardingHouseProfileObjectModel.class);
+                boardingHouseProfileObjectModel = documentSnapshot.toObject(BoardingHouseProfileObjectModel.class);
                 bhouseName.setText(boardingHouseProfileObjectModel.getName());
                 onwerNumber.setText(boardingHouseProfileObjectModel.getContactNumber());
             }
@@ -117,6 +125,13 @@ public class ViewBoardingHouse extends AppCompatActivity {
                 });
         getGallery();
 
+        findViewById(R.id.imgCall).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                yourfunction();
+            }
+        });
+
     }
     void  getGallery(){
         galleryRecyclerViewAdapter = new GalleryRecyclerViewAdapter(context,galleryObjectModelArrayList,key);
@@ -141,5 +156,60 @@ public class ViewBoardingHouse extends AppCompatActivity {
                 });
         SnapHelper snapHelper = new LinearSnapHelper();
         snapHelper.attachToRecyclerView(imageGalList);
+
     }
+
+
+    private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 1234;
+    public void yourfunction() {
+        if (ContextCompat.checkSelfPermission(ViewBoardingHouse.this,
+                Manifest.permission.CALL_PHONE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(ViewBoardingHouse.this,
+                    new String[]{Manifest.permission.CALL_PHONE},
+                    MY_PERMISSIONS_REQUEST_CALL_PHONE);
+        } else {
+            executeCall();
+        }
+    }
+    
+    private void executeCall() {
+        // start your call here
+        ViewBoardingHouse.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:"+boardingHouseProfileObjectModel.getContactNumber()));
+                startActivity(callIntent);
+            }
+        });
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_CALL_PHONE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay!
+
+                    executeCall();
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+        }
+    }
+
+
+
 }

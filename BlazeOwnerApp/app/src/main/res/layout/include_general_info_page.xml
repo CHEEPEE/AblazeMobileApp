@@ -45,6 +45,7 @@
             app:layout_constraintTop_toBottomOf="@+id/status" />
 
         <ImageView
+            android:id="@+id/editContact"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
@@ -162,7 +163,7 @@
             app:layout_constraintTop_toBottomOf="@+id/rooms" />
 
         <TextView
-            android:id="@+id/price"
+            android:id="@+id/contactNumber"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
 
@@ -184,7 +185,7 @@
             android:textColor="@color/colorPrimary"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/price" />
+            app:layout_constraintTop_toBottomOf="@+id/contactNumber" />
 
         <TextView
             android:id="@+id/bedSpacePerRoom"

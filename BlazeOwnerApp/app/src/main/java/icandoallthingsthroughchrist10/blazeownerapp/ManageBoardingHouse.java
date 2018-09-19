@@ -28,7 +28,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -42,7 +41,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -70,7 +68,7 @@ public class ManageBoardingHouse extends AppCompatActivity {
     private static final int storagepermision_access_code = 548;
     boolean imageSet = false;
     Uri bannerUri;
-    ImageView roomPhoto;
+    ImageView roomPhoto,editContact;
     String businessKey;
     FirebaseAuth auth;
     FirebaseFirestore db;
@@ -79,6 +77,7 @@ public class ManageBoardingHouse extends AppCompatActivity {
     RecyclerView imageGalList;
     GalleryRecyclerViewAdapter galleryRecyclerViewAdapter;
     ArrayList<GalleryObjectModel> galleryObjectModelArrayList = new ArrayList<>();
+    BoardingHouseProfileObjectModel boardingHouseProfileObjectModel;
 
 
     @Override
@@ -100,6 +99,7 @@ public class ManageBoardingHouse extends AppCompatActivity {
         capacityVal = (TextView) findViewById(R.id.capacityVal);
         manageGallery = (TextView) findViewById(R.id.manageGallery);
         imageGalList = (RecyclerView) findViewById(R.id.imageGalList);
+        editContact = (ImageView) findViewById(R.id.editContact);
 
 
 
@@ -110,6 +110,7 @@ public class ManageBoardingHouse extends AppCompatActivity {
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                try {
                    BoardingHouseProfileObjectModel object = documentSnapshot.toObject(BoardingHouseProfileObjectModel.class);
+                   boardingHouseProfileObjectModel = documentSnapshot.toObject(BoardingHouseProfileObjectModel.class);
                    name.setText(object.getName());
                    owner.setText(object.getOwner());
                    address.setText(object.getAddress());
@@ -152,6 +153,15 @@ public class ManageBoardingHouse extends AppCompatActivity {
             }
         });
 
+        editContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateContact();
+            }
+        });
+
+
+
 
 
         setAppBarImage();
@@ -182,7 +192,11 @@ public class ManageBoardingHouse extends AppCompatActivity {
                     }
                 });
         SnapHelper snapHelper = new LinearSnapHelper();
-        snapHelper.attachToRecyclerView(imageGalList);
+        try {
+            snapHelper.attachToRecyclerView(imageGalList);
+        }catch (IllegalStateException e){
+
+        }
     }
     void getGeneralInfo(){
         FirebaseFirestore.getInstance().collection("generalInformation").document(auth.getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -232,6 +246,42 @@ public class ManageBoardingHouse extends AppCompatActivity {
                 });
     }
 
+    void updateContact(){
+        final Dialog dialog = new Dialog(ManageBoardingHouse.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_update_contact);
+        Window window = dialog.getWindow();
+
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        dialog.show();
+        dialog.findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        final EditText contactNumber = (EditText) dialog.findViewById(R.id.contactNumber);
+        contactNumber.setText(boardingHouseProfileObjectModel.getContactNumber());
+
+        dialog.findViewById(R.id.saveChanges).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.collection("houseProfiles")
+                        .document(auth.getUid()).update("contactNumber",contactNumber.getText().toString())
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        dialog.dismiss();
+                    }
+                });
+            }
+        });
+
+    }
+
     void settingDialog(){
         final Dialog dialog = new Dialog(ManageBoardingHouse.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -279,7 +329,7 @@ public class ManageBoardingHouse extends AppCompatActivity {
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         dialog.show();
-        price = (EditText) dialog.findViewById(R.id.price);
+        price = (EditText) dialog.findViewById(R.id.contactNumber);
         available = (EditText) dialog.findViewById(R.id.availableSpace);
         roomcapacity = (EditText) dialog.findViewById(R.id.roomCapacity);
         curretBill = (CheckBox) dialog.findViewById(R.id.currentBill);
@@ -333,6 +383,8 @@ public class ManageBoardingHouse extends AppCompatActivity {
                 });
             }
         });
+
+
     }
 
     public void performFileSearch() {

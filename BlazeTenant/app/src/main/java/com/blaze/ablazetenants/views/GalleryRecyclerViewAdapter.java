@@ -54,22 +54,6 @@ public class GalleryRecyclerViewAdapter
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         final GalleryObjectModel galleryDataModel = galleryDataModelArrayList.get(position);
         GlideApp.with(context).load(galleryDataModel.getImageUrl()).centerCrop().into(holder.galleryImage);
-//          try{
-//              if (galleryDataModel.getKey().equals("nokey")){
-//                  holder.addImage.setVisibility(View.VISIBLE);
-//                  holder.addImage.setOnClickListener(new View.OnClickListener() {
-//                      @Override
-//                      public void onClick(View v) {
-//                          mOnItemClickLitener.onItemClick(v,position,galleryDataModel);
-//                      }
-//                  });
-//              }else {
-//                  holder.addImage.setVisibility(View.GONE);
-//                  GlideApp.with(context).load(galleryDataModel.getImagePath()).centerCrop().into(holder.galleryImage);
-//              }
-//          }catch (NullPointerException e){
-//
-//          }
 
     }
 

@@ -62,11 +62,11 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="32dp"
                     android:text="Bed Space Price"
-                    app:layout_constraintStart_toStartOf="@+id/price"
+                    app:layout_constraintStart_toStartOf="@+id/contactNumber"
                     app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
                 <EditText
-                    android:id="@+id/price"
+                    android:id="@+id/contactNumber"
                     style="@style/TextInput"
 
                     android:layout_width="0dp"
@@ -91,7 +91,7 @@
                     android:layout_marginTop="16dp"
                     android:text="Space Available"
                     app:layout_constraintStart_toStartOf="@+id/availableSpace"
-                    app:layout_constraintTop_toBottomOf="@+id/price" />
+                    app:layout_constraintTop_toBottomOf="@+id/contactNumber" />
 
                 <EditText
                     android:id="@+id/availableSpace"
