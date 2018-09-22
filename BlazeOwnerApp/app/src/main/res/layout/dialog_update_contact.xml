@@ -74,13 +74,12 @@
                 <EditText
                     android:id="@+id/contactNumber"
                     style="@style/TextInput"
-
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="32dp"
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="8dp"
-                    android:inputType="numberDecimal"
+                    android:inputType="phone"
                     android:textColorHint="@color/colorPrimary"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"

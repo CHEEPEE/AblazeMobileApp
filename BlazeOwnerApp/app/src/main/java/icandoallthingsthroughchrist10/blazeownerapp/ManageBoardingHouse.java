@@ -18,6 +18,8 @@ import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,12 +74,13 @@ public class ManageBoardingHouse extends AppCompatActivity {
     String businessKey;
     FirebaseAuth auth;
     FirebaseFirestore db;
-    TextView name,owner,address,mail,number,status,setting,priceVal, spaceVal,capacityVal,manageGallery;
+    TextView name,owner,address,mail,number,status,setting,priceVal, spaceVal,capacityVal,manageGallery,des;
     Context context;
     RecyclerView imageGalList;
     GalleryRecyclerViewAdapter galleryRecyclerViewAdapter;
     ArrayList<GalleryObjectModel> galleryObjectModelArrayList = new ArrayList<>();
     BoardingHouseProfileObjectModel boardingHouseProfileObjectModel;
+
 
 
     @Override
@@ -100,6 +103,7 @@ public class ManageBoardingHouse extends AppCompatActivity {
         manageGallery = (TextView) findViewById(R.id.manageGallery);
         imageGalList = (RecyclerView) findViewById(R.id.imageGalList);
         editContact = (ImageView) findViewById(R.id.editContact);
+        des = (TextView) findViewById(R.id.desciption);
 
 
 
@@ -211,9 +215,14 @@ public class ManageBoardingHouse extends AppCompatActivity {
                 if (documentSnapshot != null && documentSnapshot.exists()) {
                     Log.d("generalInformation", "Current data: " + documentSnapshot.getData());
                     GeneralInformationObjectModel generalInformationObjectModel = documentSnapshot.toObject(GeneralInformationObjectModel.class);
-                    priceVal.setText(generalInformationObjectModel.getPrice()+"");
-                    spaceVal.setText(generalInformationObjectModel.getAvailable()+"");
-                    capacityVal.setText(generalInformationObjectModel.getRoomCapacity()+"");
+                    try {
+                        priceVal.setText(generalInformationObjectModel.getPrice()+"");
+                        spaceVal.setText(generalInformationObjectModel.getAvailable()+"");
+                        capacityVal.setText(generalInformationObjectModel.getRoomCapacity()+"");
+                        des.setText(generalInformationObjectModel.getDescription());
+                    }catch (NullPointerException ex){
+
+                    }
 //                    waterBill.setChecked(generalInformationObjectModel.isWaterBil());
 //                    curretBill.setChecked(generalInformationObjectModel.isCurrentBill());
 
@@ -307,7 +316,7 @@ public class ManageBoardingHouse extends AppCompatActivity {
     void updateGenInfo(){
         final Dialog dialog = new Dialog(ManageBoardingHouse.this);
 
-        final EditText price,available,roomcapacity;
+        final EditText price,available,roomcapacity,description;
         final CheckBox waterBill,curretBill;
 
 
@@ -316,6 +325,7 @@ public class ManageBoardingHouse extends AppCompatActivity {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_general_information);
+
 
 
 
@@ -334,6 +344,27 @@ public class ManageBoardingHouse extends AppCompatActivity {
         roomcapacity = (EditText) dialog.findViewById(R.id.roomCapacity);
         curretBill = (CheckBox) dialog.findViewById(R.id.currentBill);
         waterBill = (CheckBox) dialog.findViewById(R.id.waterBill);
+        description = (EditText) dialog.findViewById(R.id.desciption);
+
+        price.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (Integer.parseInt(price.getText().toString())>2000){
+                    price.setText("2000");
+                    price.setError("2000 is the limit");
+                }
+            }
+        });
 
         FirebaseFirestore.getInstance().collection("generalInformation").document(auth.getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -347,12 +378,16 @@ public class ManageBoardingHouse extends AppCompatActivity {
                 if (documentSnapshot != null && documentSnapshot.exists()) {
                     Log.d("generalInformation", "Current data: " + documentSnapshot.getData());
                     GeneralInformationObjectModel generalInformationObjectModel = documentSnapshot.toObject(GeneralInformationObjectModel.class);
-                    price.setText(generalInformationObjectModel.getPrice()+"");
-                    available.setText(generalInformationObjectModel.getAvailable()+"");
-                    roomcapacity.setText(generalInformationObjectModel.getRoomCapacity()+"");
-                    waterBill.setChecked(generalInformationObjectModel.isWaterBil());
-                    curretBill.setChecked(generalInformationObjectModel.isCurrentBill());
+                    try {
+                        price.setText(generalInformationObjectModel.getPrice()+"");
+                        available.setText(generalInformationObjectModel.getAvailable()+"");
+                        roomcapacity.setText(generalInformationObjectModel.getRoomCapacity()+"");
+                        waterBill.setChecked(generalInformationObjectModel.isWaterBil());
+                        curretBill.setChecked(generalInformationObjectModel.isCurrentBill());
+                        description.setText(generalInformationObjectModel.getDescription());
+                    }catch (NullPointerException ex){
 
+                    }
                 } else {
                     Log.d("generalInformation", "Current data: null");
                 }
@@ -370,7 +405,8 @@ public class ManageBoardingHouse extends AppCompatActivity {
                                 Integer.parseInt(available.getText().toString()),
                                 Integer.parseInt(roomcapacity.getText().toString()),
                                 waterBill.isChecked(),
-                                curretBill.isChecked()
+                                curretBill.isChecked(),
+                                description.getText().toString(),"roomtype"
                                 );
 
                 FirebaseFirestore.getInstance()

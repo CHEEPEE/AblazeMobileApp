@@ -173,7 +173,7 @@ public class ViewBoardingHouse extends AppCompatActivity {
             executeCall();
         }
     }
-    
+
     private void executeCall() {
         // start your call here
         ViewBoardingHouse.this.runOnUiThread(new Runnable() {
