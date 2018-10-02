@@ -102,9 +102,14 @@ public class BoardingHouseListRecyclerViewAdapter extends RecyclerView.Adapter<B
                             GlideApp.with(context)
                                     .load(documentSnapshot.getData().get("imageBanner"))
                                     .diskCacheStrategy(DiskCacheStrategy.ALL).centerCrop()
+                                    .placeholder(R.drawable.ic_home_black_24dp)
                                     .into(holder.imageBanner);
                         }catch (NullPointerException ex){
-
+                            GlideApp.with(context)
+                                    .load("")
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL).centerCrop()
+                                    .placeholder(R.drawable.ic_home_black_24dp)
+                                    .into(holder.imageBanner);
                         }
                     }
                 });

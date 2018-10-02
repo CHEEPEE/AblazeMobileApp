@@ -81,8 +81,6 @@ public class ManageBoardingHouse extends AppCompatActivity {
     ArrayList<GalleryObjectModel> galleryObjectModelArrayList = new ArrayList<>();
     BoardingHouseProfileObjectModel boardingHouseProfileObjectModel;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,10 +102,6 @@ public class ManageBoardingHouse extends AppCompatActivity {
         imageGalList = (RecyclerView) findViewById(R.id.imageGalList);
         editContact = (ImageView) findViewById(R.id.editContact);
         des = (TextView) findViewById(R.id.desciption);
-
-
-
-
 
         db.collection("houseProfiles").document(auth.getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -297,6 +291,14 @@ public class ManageBoardingHouse extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_settings);
         Window window = dialog.getWindow();
+        dialog.findViewById(R.id.tickets).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(context,ManageReservationTickets.class);
+                startActivity(i);
+                dialog.dismiss();
+            }
+        });
         dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -319,15 +321,9 @@ public class ManageBoardingHouse extends AppCompatActivity {
         final EditText price,available,roomcapacity,description;
         final CheckBox waterBill,curretBill;
 
-
-
-
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_general_information);
-
-
-
 
         Window window = dialog.getWindow();
         dialog.findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
@@ -366,6 +362,25 @@ public class ManageBoardingHouse extends AppCompatActivity {
             }
         });
 
+        available.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (Integer.parseInt(available.getText().toString())>10){
+                    available.setText("10");
+                    available.setError("10 is the limit");
+                }
+            }
+        });
         FirebaseFirestore.getInstance().collection("generalInformation").document(auth.getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
@@ -587,7 +602,6 @@ public class ManageBoardingHouse extends AppCompatActivity {
                             .centerCrop()
                             .diskCacheStrategy(DiskCacheStrategy.ALL).into((ImageView) findViewById(R.id.app_bar_image));
                 }
-
             }
         });
     }

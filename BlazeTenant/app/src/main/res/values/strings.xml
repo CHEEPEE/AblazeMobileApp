@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">AblazeTenants</string>
+    <string name="web_client">353744476046-q9a882ku0r7k2ni0o58sbs1l6s011miu.apps.googleusercontent.com</string>
+    <string name="title_activity_boarding_house_profile_bot_nav">BoardingHouseProfileBotNav</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>

@@ -10,6 +10,7 @@ public class UserProfileObjectModel {
     private String userName;
     private String contactNumber;
     private String email;
+    private String userType;
 
     public UserProfileObjectModel(){
 
@@ -21,6 +22,7 @@ public class UserProfileObjectModel {
         this.userName= userName;
         this.contactNumber= contactNumber;
         this.email=email;
+        this.userType = "tenant";
     }
 
     public String getContactNumber() {
@@ -43,4 +45,7 @@ public class UserProfileObjectModel {
         return email;
     }
 
+    public String getUserType() {
+        return userType;
+    }
 }

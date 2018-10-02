@@ -1,6 +1,7 @@
 package com.blaze.ablazetenants.activity;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,6 +16,8 @@ import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -37,7 +40,7 @@ import javax.annotation.Nullable;
 
 public class ViewBoardingHouse extends AppCompatActivity {
     String key;
-    TextView bhouseName,priceVal,spaceVal,capacityVal,waterBill,electBill,onwerNumber;
+    TextView bhouseName,priceVal,spaceVal,capacityVal,waterBill,electBill,onwerNumber,bookReservation;
     ImageView app_bar_image;
     Context context;
     RecyclerView imageGalList;
@@ -63,6 +66,7 @@ public class ViewBoardingHouse extends AppCompatActivity {
         electBill = (TextView) findViewById(R.id.electBill);
         onwerNumber = (TextView) findViewById(R.id.onwerNumber);
         imageGalList = (RecyclerView) findViewById(R.id.galList);
+        bookReservation = (TextView) findViewById(R.id.bookReservation);
         ref.collection("houseProfiles").document(key).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
@@ -129,6 +133,12 @@ public class ViewBoardingHouse extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 yourfunction();
+            }
+        });
+        bookReservation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bookReservation();
             }
         });
 
@@ -208,6 +218,24 @@ public class ViewBoardingHouse extends AppCompatActivity {
                 return;
             }
         }
+    }
+
+    void bookReservation(){
+        final Dialog dialog = new Dialog(ViewBoardingHouse.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dlg_book_reservation_menu);
+        Window window = dialog.getWindow();
+        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        dialog.show();
     }
 
 

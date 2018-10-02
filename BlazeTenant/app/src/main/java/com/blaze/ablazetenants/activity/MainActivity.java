@@ -1,19 +1,34 @@
 package com.blaze.ablazetenants.activity;
 
 import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.blaze.ablazetenants.R;
 import com.blaze.ablazetenants.objectModels.BoardingHouseProfileObjectModel;
 import com.blaze.ablazetenants.objectModels.GeneralInformationObjectModel;
 import com.blaze.ablazetenants.views.BoardingHouseListRecyclerViewAdapter;
+import com.bumptech.glide.util.Util;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -37,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<BoardingHouseProfileObjectModel> houseProfileObjectModels = new ArrayList<>();
     int maxPrice = 0;
     int minSpace = 0;
+    ImageView account_settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +60,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         db = FirebaseFirestore.getInstance();
         searchBar = (EditText) findViewById(R.id.searchBar);
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setTimestampsInSnapshotsEnabled(true)
-                .build();
-        db.setFirestoreSettings(settings);
+        account_settings = (ImageView) findViewById(R.id.account_settings);
+
         boardingHouseRecyclerView = (RecyclerView)findViewById(R.id.boardingHouseRecyclerView);
         boardingHouseRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
         bHadapter =new BoardingHouseListRecyclerViewAdapter(MainActivity.this,generalInformationObjectModelArrayList);
@@ -63,6 +77,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 filterDialog();
+            }
+        });
+        account_settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                settingDialog();
             }
         });
     }
@@ -121,9 +141,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
     void getBoardingHouseWithKeyWord(final String keyword){
         generalInformationObjectModelArrayList.clear();
         for (BoardingHouseProfileObjectModel houseProfileObjectModel:houseProfileObjectModels){
@@ -202,5 +219,61 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    void settingDialog(){
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dlg_account_menu);
+        Window window = dialog.getWindow();
+        dialog.findViewById(R.id.copy).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                copyToClibBoard();
+                dialog.dismiss();
+            }
+        });
+        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signOut();
+            }
+        });
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        dialog.show();
+    }
+    private void signOut(){
+        GoogleSignInClient mGoogleSignInClient ;
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                new OnCompleteListener<Void>() {  //signout Google
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        FirebaseAuth.getInstance().signOut(); //signout firebase
+                        Intent setupIntent = new Intent(getBaseContext(),LoginActivity.class/*To ur activity calss*/);
+                        Toast.makeText(getBaseContext(), "Logged Out", Toast.LENGTH_LONG).show(); //if u want to show some text
+                        setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(setupIntent);
+                        finish();
+                    }
+                });
+    }
+    void copyToClibBoard(){
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("userId", FirebaseAuth.getInstance().getUid());
+        clipboard.setPrimaryClip(clip);
+        Toast.makeText(MainActivity.this,"Copy to Clipboard "+FirebaseAuth.getInstance().getUid(),Toast.LENGTH_SHORT).show();
     }
 }
