@@ -29,7 +29,19 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
+                android:id="@+id/ticketStatus"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/ic_receipt_black_24dp"
+                android:tint="@color/colorGrey"
+                app:layout_constraintBottom_toBottomOf="@+id/account_settings"
+                app:layout_constraintEnd_toStartOf="@+id/account_settings"
+                app:layout_constraintTop_toTopOf="@+id/account_settings" />
+
+            <ImageView
                 android:id="@+id/account_settings"
+                android:tint="@color/colorPrimary"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_marginEnd="24dp"

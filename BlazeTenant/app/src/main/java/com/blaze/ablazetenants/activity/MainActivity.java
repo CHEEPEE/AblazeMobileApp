@@ -16,12 +16,16 @@ import android.view.Window;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blaze.ablazetenants.R;
+import com.blaze.ablazetenants.appModule.GlideApp;
 import com.blaze.ablazetenants.objectModels.BoardingHouseProfileObjectModel;
 import com.blaze.ablazetenants.objectModels.GeneralInformationObjectModel;
+import com.blaze.ablazetenants.objectModels.ReservationTicketObjectModel;
 import com.blaze.ablazetenants.views.BoardingHouseListRecyclerViewAdapter;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.util.Util;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -43,15 +47,20 @@ import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class MainActivity extends AppCompatActivity {
     FirebaseFirestore db;
     BoardingHouseListRecyclerViewAdapter bHadapter;
     ArrayList<GeneralInformationObjectModel> generalInformationObjectModelArrayList = new ArrayList<>();
     RecyclerView boardingHouseRecyclerView;
     EditText searchBar;
+    ImageView ticketStatus;
     ArrayList<BoardingHouseProfileObjectModel> houseProfileObjectModels = new ArrayList<>();
+    ReservationTicketObjectModel reservationTicketObjectModel;
     int maxPrice = 0;
     int minSpace = 0;
+    FirebaseAuth mAuth;
     ImageView account_settings;
 
     @Override
@@ -59,10 +68,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         searchBar = (EditText) findViewById(R.id.searchBar);
         account_settings = (ImageView) findViewById(R.id.account_settings);
-
+        ticketStatus = (ImageView) findViewById(R.id.ticketStatus);
         boardingHouseRecyclerView = (RecyclerView)findViewById(R.id.boardingHouseRecyclerView);
+        ticketStatus = (ImageView) findViewById(R.id.ticketStatus);
         boardingHouseRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
         bHadapter =new BoardingHouseListRecyclerViewAdapter(MainActivity.this,generalInformationObjectModelArrayList);
         boardingHouseRecyclerView.setAdapter(bHadapter);
@@ -83,6 +94,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 settingDialog();
+            }
+        });
+
+        db.collection("reservationTickets").whereEqualTo("tenantId",mAuth.getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                for (DocumentSnapshot documentSnapshot:queryDocumentSnapshots.getDocuments()){
+                    reservationTicketObjectModel = documentSnapshot.toObject(ReservationTicketObjectModel.class);
+                    if (reservationTicketObjectModel.getStatus().equals("reserved")){
+                        ticketStatus.setColorFilter(getResources().getColor(R.color.colorGreen));
+                    }
+                }
+            }
+        });
+        ticketStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getTicketDetails();
             }
         });
     }
@@ -138,6 +167,41 @@ public class MainActivity extends AppCompatActivity {
 
                }
 
+            }
+        });
+    }
+
+
+    void getTicketDetails(){
+
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.dlg_ticket_details);
+
+        Window window = dialog.getWindow();
+        dialog.show();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        final CircleImageView bhouseIcon = (CircleImageView) dialog.findViewById(R.id.boardingHouseIcon);
+        final TextView bhouseName = (TextView) dialog.findViewById(R.id.bhouseName);
+        db.collection("imageBanner").document(reservationTicketObjectModel.getOwnerId()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                GlideApp.with(MainActivity.this).load(documentSnapshot.get("imageBanner").toString()).centerCrop().diskCacheStrategy(DiskCacheStrategy.ALL).into(bhouseIcon);
+            }
+        });
+        db.collection("houseProfiles").document(reservationTicketObjectModel.getOwnerId()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                BoardingHouseProfileObjectModel boardingHouseProfileObjectModel = documentSnapshot.toObject(BoardingHouseProfileObjectModel.class);
+                bhouseName.setText(boardingHouseProfileObjectModel.getName());
+            }
+        });
+        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
             }
         });
     }
