@@ -60,22 +60,11 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/textView12"
-                    style="@style/TextInputLabe"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="32dp"
-                    android:text="Contact Number"
-                    app:layout_constraintStart_toStartOf="@+id/contactNumber"
-                    app:layout_constraintTop_toBottomOf="@+id/textView11" />
-
                 <EditText
                     android:id="@+id/contactNumber"
                     style="@style/TextInput"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="43dp"
                     android:layout_marginEnd="32dp"
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="8dp"
@@ -83,9 +72,41 @@
                     android:textColorHint="@color/colorPrimary"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/text_ttt" />
+
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Messenger Id"
+                    android:textSize="8sp"
+                    app:layout_constraintStart_toStartOf="@+id/contactNumber"
+                    app:layout_constraintTop_toBottomOf="@+id/contactNumber" />
+
+                <EditText
+                    android:id="@+id/inputMessengerId"
+                    style="@style/TextInput"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/textView12"
                     app:layout_constraintTop_toBottomOf="@+id/textView12" />
+
+                <TextView
+                    android:id="@+id/text_ttt"
+                    style="@style/TextInputLabe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="Contact Number"
+                    app:layout_constraintStart_toStartOf="@+id/textView11"
+                    app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
                 <TextView
                     android:id="@+id/saveChanges"
@@ -98,7 +119,7 @@
                     android:text="Update Contact"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/contactNumber" />
+                    app:layout_constraintTop_toBottomOf="@+id/inputMessengerId" />
 
             </android.support.constraint.ConstraintLayout>
         </ScrollView>

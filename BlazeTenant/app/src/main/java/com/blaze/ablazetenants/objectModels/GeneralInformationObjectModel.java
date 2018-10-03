@@ -11,11 +11,12 @@ public class GeneralInformationObjectModel {
     private int roomCapacity;
     private boolean waterBil;
     private boolean currentBill;
+    private String description;
     public GeneralInformationObjectModel(){
 
     }
     public GeneralInformationObjectModel(String userId,
-            int price,int available,int roomCapacity,boolean waterBil,boolean currentBill
+            int price,int available,int roomCapacity,boolean waterBil,boolean currentBill,String description
     ){
         this.userId = userId;
         this.price = price;
@@ -23,6 +24,11 @@ public class GeneralInformationObjectModel {
         this.roomCapacity = roomCapacity;
         this.waterBil = waterBil;
         this.currentBill = currentBill;
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public String getUserId() {

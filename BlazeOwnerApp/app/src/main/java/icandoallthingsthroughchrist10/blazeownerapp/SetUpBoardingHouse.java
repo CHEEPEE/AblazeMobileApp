@@ -47,7 +47,7 @@ public class SetUpBoardingHouse extends AppCompatActivity {
                         auth.getCurrentUser().getDisplayName(),
                         contact.getText().toString(),
                         email.getText().toString(),
-                        "pending");
+                        "pending",null);
         db.collection("houseProfiles").document(auth.getUid())
                 .set(boardingHouseProfileObjectModel)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

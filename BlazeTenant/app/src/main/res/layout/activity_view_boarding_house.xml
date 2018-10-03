@@ -222,6 +222,17 @@
                 app:layout_constraintTop_toBottomOf="@+id/electBill" />
 
             <TextView
+                android:id="@+id/description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="24dp"
+                android:text="Additional Information"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/waterbill"
+                app:layout_constraintTop_toBottomOf="@+id/waterbill" />
+
+            <TextView
                 android:id="@+id/textView4"
                 style="@style/TextTitle"
                 android:layout_width="wrap_content"
@@ -233,7 +244,7 @@
                 android:textColor="#2e2e2e"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="@+id/textView9"
-                app:layout_constraintTop_toBottomOf="@+id/waterbill" />
+                app:layout_constraintTop_toBottomOf="@+id/description" />
 
             <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"

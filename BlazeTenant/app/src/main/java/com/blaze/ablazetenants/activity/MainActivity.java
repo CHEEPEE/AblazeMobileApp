@@ -111,7 +111,10 @@ public class MainActivity extends AppCompatActivity {
         ticketStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getTicketDetails();
+                if (reservationTicketObjectModel != null){
+                    getTicketDetails();
+                }
+
             }
         });
     }

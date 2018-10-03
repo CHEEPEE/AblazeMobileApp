@@ -13,6 +13,7 @@ public class GeneralInformationObjectModel {
     private boolean currentBill;
     private String description;
     private String roomType;
+
     public GeneralInformationObjectModel(){
 
     }
@@ -27,6 +28,7 @@ public class GeneralInformationObjectModel {
         this.currentBill = currentBill;
         this.description = description;
         this.roomType = roomType;
+
     }
 
     public String getUserId() {
@@ -60,4 +62,6 @@ public class GeneralInformationObjectModel {
     public String getRoomType() {
         return roomType;
     }
+
+
 }

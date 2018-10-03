@@ -2,6 +2,8 @@ package com.blaze.ablazetenants.activity;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.blaze.ablazetenants.R;
 import com.blaze.ablazetenants.appModule.GlideApp;
@@ -28,6 +31,7 @@ import com.blaze.ablazetenants.objectModels.GalleryObjectModel;
 import com.blaze.ablazetenants.objectModels.GeneralInformationObjectModel;
 import com.blaze.ablazetenants.views.GalleryRecyclerViewAdapter;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -40,7 +44,7 @@ import javax.annotation.Nullable;
 
 public class ViewBoardingHouse extends AppCompatActivity {
     String key;
-    TextView bhouseName,priceVal,spaceVal,capacityVal,waterBill,electBill,onwerNumber,bookReservation;
+    TextView bhouseName,priceVal,spaceVal,capacityVal,waterBill,electBill,onwerNumber,bookReservation,description;
     ImageView app_bar_image;
     Context context;
     RecyclerView imageGalList;
@@ -67,6 +71,7 @@ public class ViewBoardingHouse extends AppCompatActivity {
         onwerNumber = (TextView) findViewById(R.id.onwerNumber);
         imageGalList = (RecyclerView) findViewById(R.id.galList);
         bookReservation = (TextView) findViewById(R.id.bookReservation);
+        description = (TextView) findViewById(R.id.description);
         ref.collection("houseProfiles").document(key).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
@@ -91,6 +96,7 @@ public class ViewBoardingHouse extends AppCompatActivity {
                         priceVal.setText("Php "+generalInformationObjectModel.getPrice()+"");
                         spaceVal.setText("Space Available: "+generalInformationObjectModel.getAvailable()+"");
                         capacityVal.setText(generalInformationObjectModel.getRoomCapacity()+" beds per room");
+                        description.setText(generalInformationObjectModel.getDescription());
                         if (generalInformationObjectModel.isCurrentBill()){
                             electBill.setVisibility(View.VISIBLE);
                         }else {
@@ -232,10 +238,55 @@ public class ViewBoardingHouse extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
+        TextView messenger = (TextView) dialog.findViewById(R.id.messenger);
+        messenger.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (boardingHouseProfileObjectModel.getMessengerId()!=null){
+                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(boardingHouseProfileObjectModel.getMessengerId()));
+                    startActivity(i);
+                }else {
+                    Toast.makeText(context,"Messenger not Available",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        dialog.findViewById(R.id.call).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                yourfunction();
+            }
+        });
+        dialog.findViewById(R.id.mesage).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openSms();
+            }
+        });
+        dialog.findViewById(R.id.copy).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                copyToClibBoard();
+            }
+        });
+
 
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         dialog.show();
+    }
+
+    void openSms(){
+        Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+        sendIntent.setData(Uri.parse("sms:"+boardingHouseProfileObjectModel.getContactNumber()));
+        sendIntent.putExtra("sms_body","");
+        startActivity(sendIntent);
+    }
+
+    void copyToClibBoard(){
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("userId", boardingHouseProfileObjectModel.getContactNumber());
+        clipboard.setPrimaryClip(clip);
+        Toast.makeText(ViewBoardingHouse.this,"Copy to Clipboard "+boardingHouseProfileObjectModel.getContactNumber(),Toast.LENGTH_SHORT).show();
     }
 
 

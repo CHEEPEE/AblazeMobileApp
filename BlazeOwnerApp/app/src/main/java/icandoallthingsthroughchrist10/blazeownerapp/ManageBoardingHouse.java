@@ -267,13 +267,17 @@ public class ManageBoardingHouse extends AppCompatActivity {
         });
 
         final EditText contactNumber = (EditText) dialog.findViewById(R.id.contactNumber);
+        final EditText inputMessengerId=  (EditText) dialog.findViewById(R.id.inputMessengerId);
         contactNumber.setText(boardingHouseProfileObjectModel.getContactNumber());
+        inputMessengerId.setText(boardingHouseProfileObjectModel.getMessengerId());
 
         dialog.findViewById(R.id.saveChanges).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 db.collection("houseProfiles")
-                        .document(auth.getUid()).update("contactNumber",contactNumber.getText().toString())
+                        .document(auth.getUid())
+                        .update("contactNumber",contactNumber.getText().toString(),
+                                "messengerId",inputMessengerId.getText().toString()!=null?inputMessengerId.getText().toString():null)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -434,8 +438,6 @@ public class ManageBoardingHouse extends AppCompatActivity {
                 });
             }
         });
-
-
     }
 
     public void performFileSearch() {

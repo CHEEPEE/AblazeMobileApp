@@ -15,6 +15,7 @@ public class BoardingHouseProfileObjectModel {
     private String contactNumber;
     private String email;
     private String status;
+    private String messengerId;
 
     public BoardingHouseProfileObjectModel(){
 
@@ -26,7 +27,8 @@ public class BoardingHouseProfileObjectModel {
                                            String owner,
                                            String contactNumber,
                                            String email,
-                                           String status
+                                           String status,
+                                           String messengerId
     ){
        this.userId = userId;
        this.name = name;
@@ -36,6 +38,7 @@ public class BoardingHouseProfileObjectModel {
        this.contactNumber = contactNumber;
        this.email = email;
        this.status = status;
+       this.messengerId = messengerId;
     }
 
     public String getEmail() {
@@ -70,5 +73,8 @@ public class BoardingHouseProfileObjectModel {
         return status;
     }
 
+    public String getMessengerId() {
+        return messengerId;
+    }
 
 }

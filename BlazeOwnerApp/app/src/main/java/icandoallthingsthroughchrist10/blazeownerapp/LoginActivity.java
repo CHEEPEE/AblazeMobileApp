@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -159,46 +160,90 @@ public class LoginActivity extends AppCompatActivity {
                     public void run() {
                         // your code here
                         try {
-                            UserProfileObjectModel userProfileObjectModel = new UserProfileObjectModel(mAuth.getUid(),
-                                    mAuth.getCurrentUser().getPhotoUrl().toString(),mAuth.getCurrentUser().getDisplayName(),
-                                    mAuth.getCurrentUser().getPhoneNumber(),
-                                    mAuth.getCurrentUser().getEmail());
-
-                            FirebaseFirestore.getInstance()
-                                    .collection("users")
-                                    .document(mAuth.getUid()).set(userProfileObjectModel)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            FirebaseFirestore.getInstance()
-                                                    .collection("houseProfiles")
-                                                    .document(mAuth.getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                                                @Override
-                                                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                                                    if (documentSnapshot.getData() == null){
-                                                        Intent i = new Intent(LoginActivity.this,SetUpBoardingHouse.class);
-                                                        startActivity(i);
-                                                        finish();
-                                                    }else {
-                                                        Intent i = new Intent(LoginActivity.this,ManageBoardingHouse.class);
-                                                        startActivity(i);
-                                                        finish();
-                                                    }
-                                                }
-                                            });
+                            FirebaseFirestore.getInstance().collection("users")
+                            .document(mAuth.getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                @Override
+                                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                                    if(documentSnapshot != null && documentSnapshot.exists()){
+                                        if (!documentSnapshot.get("userType").toString().equals(null)){
+                                            if (documentSnapshot.get("userType").toString().equals("owner")){
+                                                reg();
+                                            }else {
+                                                Toast.makeText(LoginActivity.this,"Tenants cant Login Here",Toast.LENGTH_SHORT).show();
+                                                signOut();
+                                            }
+                                        }else {
+                                            reg();
                                         }
-                                    });
-
+                                    }else {
+                                        reg();
+                                    }
+                                }
+                            });
                         }catch (NullPointerException e){
                             System.out.println("users Exception " +e);
                         }
-
                     }
 
                 },
                 2000
         );
     }
+
+    void reg(){
+        UserProfileObjectModel userProfileObjectModel = new UserProfileObjectModel(mAuth.getUid(),
+                mAuth.getCurrentUser().getPhotoUrl().toString(),mAuth.getCurrentUser().getDisplayName(),
+                mAuth.getCurrentUser().getPhoneNumber(),
+                mAuth.getCurrentUser().getEmail());
+
+        FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(mAuth.getUid()).set(userProfileObjectModel)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        FirebaseFirestore.getInstance()
+                                .collection("houseProfiles")
+                                .document(mAuth.getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                                if (documentSnapshot.getData() == null){
+                                    Intent i = new Intent(LoginActivity.this,SetUpBoardingHouse.class);
+                                    startActivity(i);
+                                    finish();
+                                }else {
+                                    Intent i = new Intent(LoginActivity.this,ManageBoardingHouse.class);
+                                    startActivity(i);
+                                    finish();
+                                }
+                            }
+                        });
+                    }
+                });
+    }
+
+    private void signOut(){
+        GoogleSignInClient mGoogleSignInClient ;
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                new OnCompleteListener<Void>() {  //signout Google
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        FirebaseAuth.getInstance().signOut(); //signout firebase
+                        Intent setupIntent = new Intent(getBaseContext(),LoginActivity.class/*To ur activity calss*/);
+                        Toast.makeText(getBaseContext(), "Logged Out", Toast.LENGTH_LONG).show(); //if u want to show some text
+                        setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(setupIntent);
+                        finish();
+                    }
+                });
+    }
+
+
 
 
 }
