@@ -34,11 +34,22 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -59,18 +70,19 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
+import icandoallthingsthroughchrist10.blazeownerapp.objectModel.BhouseLocationModel;
 import icandoallthingsthroughchrist10.blazeownerapp.objectModel.BoardingHouseProfileObjectModel;
 import icandoallthingsthroughchrist10.blazeownerapp.objectModel.GalleryObjectModel;
 import icandoallthingsthroughchrist10.blazeownerapp.objectModel.GeneralInformationObjectModel;
 import icandoallthingsthroughchrist10.blazeownerapp.views.GalleryRecyclerViewAdapter;
 
-public class ManageBoardingHouse extends AppCompatActivity {
+public class ManageBoardingHouse extends AppCompatActivity{
     private static final int READ_REQUEST_CODE = 42;
     boolean access_storage;
     private static final int storagepermision_access_code = 548;
     boolean imageSet = false;
     Uri bannerUri;
-    ImageView roomPhoto,editContact;
+    ImageView roomPhoto,editContact,update_map;
     String businessKey;
     FirebaseAuth auth;
     FirebaseFirestore db;
@@ -80,6 +92,8 @@ public class ManageBoardingHouse extends AppCompatActivity {
     GalleryRecyclerViewAdapter galleryRecyclerViewAdapter;
     ArrayList<GalleryObjectModel> galleryObjectModelArrayList = new ArrayList<>();
     BoardingHouseProfileObjectModel boardingHouseProfileObjectModel;
+    private GoogleMap mMap;
+    private Marker marker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +117,8 @@ public class ManageBoardingHouse extends AppCompatActivity {
         editContact = (ImageView) findViewById(R.id.editContact);
         des = (TextView) findViewById(R.id.desciption);
 
+        update_map = (ImageView) findViewById(R.id.update_map);
+
         db.collection("houseProfiles").document(auth.getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
@@ -120,6 +136,13 @@ public class ManageBoardingHouse extends AppCompatActivity {
                }catch (NullPointerException ex){
 
                }
+            }
+        });
+        update_map.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i  =new Intent(context,MapsProfileUpdateActivity.class);
+                startActivity(i);
             }
         });
         setting.setOnClickListener(new View.OnClickListener() {
@@ -158,12 +181,35 @@ public class ManageBoardingHouse extends AppCompatActivity {
             }
         });
 
-
-
-
-
         setAppBarImage();
         getGeneralInfo();
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                mMap = googleMap;
+                db.collection("bhouseLocation").document(auth.getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                       if (documentSnapshot.getData() !=null){
+                           BhouseLocationModel bhouseLocationModel = documentSnapshot.toObject(BhouseLocationModel.class);
+                           LatLng latLng = new LatLng(bhouseLocationModel.getLocationLatitude(),bhouseLocationModel.getLocationLongitude());
+                           if (mMap !=null){
+                               marker = mMap.addMarker(new MarkerOptions()
+                                       .position(latLng).title(boardingHouseProfileObjectModel.getName())
+                                       .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN))
+                                       .draggable(false).visible(true));
+                               mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                       new LatLng(bhouseLocationModel.getLocationLatitude()
+                                               ,bhouseLocationModel.getLocationLongitude()), 15));
+                           }
+                       }
+                    }
+                });
+            }
+        });
 
 
     }
@@ -346,6 +392,31 @@ public class ManageBoardingHouse extends AppCompatActivity {
         waterBill = (CheckBox) dialog.findViewById(R.id.waterBill);
         description = (EditText) dialog.findViewById(R.id.desciption);
 
+        roomcapacity.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                try {
+                    if (Integer.parseInt(roomcapacity.getText().toString())>10){
+                        roomcapacity.setText("10");
+                        roomcapacity.setError("10 is the limit");
+                    }
+                }catch (NumberFormatException e){
+
+
+                }
+            }
+        });
+
         price.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -359,9 +430,14 @@ public class ManageBoardingHouse extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (Integer.parseInt(price.getText().toString())>2000){
-                    price.setText("2000");
-                    price.setError("2000 is the limit");
+
+                try {
+                    if (Integer.parseInt(price.getText().toString())>2000){
+                        price.setText("2000");
+                        price.setError("2000 is the limit");
+                    }
+                }catch (NumberFormatException e){
+
                 }
             }
         });
@@ -379,10 +455,14 @@ public class ManageBoardingHouse extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (Integer.parseInt(available.getText().toString())>10){
-                    available.setText("10");
-                    available.setError("10 is the limit");
-                }
+               try {
+                   if (Integer.parseInt(available.getText().toString())>10){
+                       available.setText("10");
+                       available.setError("10 is the limit");
+                   }
+               }catch (NumberFormatException e) {
+
+               }
             }
         });
         FirebaseFirestore.getInstance().collection("generalInformation").document(auth.getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {

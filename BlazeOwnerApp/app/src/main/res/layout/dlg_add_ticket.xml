@@ -33,6 +33,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView13" />
 
+    <EditText
+        android:id="@+id/additionInfo"
+        style="@style/TextInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Additional Information Here"
+        android:textSize="10sp"
+        android:lines="10"
+        android:gravity="start"
+        app:layout_constraintEnd_toEndOf="@+id/account_code"
+        app:layout_constraintStart_toStartOf="@+id/account_code"
+        app:layout_constraintTop_toBottomOf="@+id/account_code" />
+
+
     <TextView
         android:id="@+id/saveAccountCode"
         style="@style/defaultButtonStyle"
@@ -45,6 +60,8 @@
         android:text="Save Account Code"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/account_code" />
+        app:layout_constraintTop_toBottomOf="@+id/additionInfo"
+        app:layout_constraintVertical_bias="1.0" />
 </android.support.constraint.ConstraintLayout>

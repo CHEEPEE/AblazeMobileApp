@@ -75,12 +75,14 @@ public class ManageReservationTickets extends AppCompatActivity {
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.dlg_add_ticket);
         final EditText accountCode = (EditText) dialog.findViewById(R.id.account_code);
+        final EditText additionalInfo = (EditText) dialog.findViewById(R.id.additionInfo);
         final TextView saveAccountCode = (TextView) dialog.findViewById(R.id.saveAccountCode);
         saveAccountCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (accountCode.getText().toString().trim().length()!=0){
-                    saveAccountCode(accountCode.getText().toString(),dialog);
+                    saveAccountCode(accountCode.getText().toString(),dialog,additionalInfo.getText().toString().equals(null)?"N/A":additionalInfo.getText().toString());
+                    saveAccountCode.setClickable(false);
                 }else {
                     accountCode.setError("Fill up Account Code");
                 }
@@ -96,7 +98,9 @@ public class ManageReservationTickets extends AppCompatActivity {
         ticketsRecyclerViewAdapter = new TicketsRecyclerViewAdapter(context,reservationTicketObjectModels);
         ticketList.setLayoutManager(new LinearLayoutManager(context));
         ticketList.setAdapter(ticketsRecyclerViewAdapter);
-        db.collection("reservationTickets").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        db.collection("reservationTickets")
+                .whereEqualTo("ownerId",FirebaseAuth.getInstance().getUid())
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 reservationTicketObjectModels.clear();
@@ -108,10 +112,10 @@ public class ManageReservationTickets extends AppCompatActivity {
         });
     }
 
-    void saveAccountCode(final String accountCode, final Dialog dialog){
+    void saveAccountCode(final String accountCode, final Dialog dialog,String additionalInfo){
         final String  key =  db.collection("ReservationTickets").document().getId();
         final  ReservationTicketObjectModel reservationTicketObjectModel = new ReservationTicketObjectModel(accountCode,
-                uid,"null",key,"null","reserved");
+                uid,"null",key,additionalInfo,"reserved");
 
 //        check available
         db.collection("generalInformation").document(uid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -120,7 +124,9 @@ public class ManageReservationTickets extends AppCompatActivity {
                 final GeneralInformationObjectModel generalInformationObjectModel = task.getResult().toObject(GeneralInformationObjectModel.class);
                 if (generalInformationObjectModel.getAvailable()!=0){
 //                    check if already inserted
-                    db.collection("reservationTickets").whereEqualTo("tenantId",accountCode).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    db.collection("reservationTickets").whereEqualTo("tenantId",accountCode)
+                            .whereEqualTo("ownerId",FirebaseAuth.getInstance().getUid())
+                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.getResult().getDocuments().size()==0){
@@ -139,11 +145,13 @@ public class ManageReservationTickets extends AppCompatActivity {
                                 });
                             }else {
                                 Toast.makeText(context,"already Added",Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
                             }
                         }
                     });
                 }else {
                     Toast.makeText(context,"No Space Available",Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
                 }
             }
         });

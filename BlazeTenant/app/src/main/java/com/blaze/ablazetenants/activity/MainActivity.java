@@ -43,6 +43,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.annotation.Nullable;
@@ -188,17 +189,32 @@ public class MainActivity extends AppCompatActivity {
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         final CircleImageView bhouseIcon = (CircleImageView) dialog.findViewById(R.id.boardingHouseIcon);
         final TextView bhouseName = (TextView) dialog.findViewById(R.id.bhouseName);
-        db.collection("imageBanner").document(reservationTicketObjectModel.getOwnerId()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        final TextView name = (TextView) dialog.findViewById(R.id.name);
+        final TextView additionalInfo = (TextView) dialog.findViewById(R.id.additionalInfo);
+        TextView date = (TextView) dialog.findViewById(R.id.date);
+
+        db.collection( "imageBanner").document(reservationTicketObjectModel.getOwnerId()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                GlideApp.with(MainActivity.this).load(documentSnapshot.get("imageBanner").toString()).centerCrop().diskCacheStrategy(DiskCacheStrategy.ALL).into(bhouseIcon);
+              try {
+                  GlideApp.with(MainActivity.this).load(documentSnapshot.get("imageBanner").toString()).centerCrop().diskCacheStrategy(DiskCacheStrategy.ALL).into(bhouseIcon);
+              }catch (NullPointerException ex){
+
+              }
             }
         });
         db.collection("houseProfiles").document(reservationTicketObjectModel.getOwnerId()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 BoardingHouseProfileObjectModel boardingHouseProfileObjectModel = documentSnapshot.toObject(BoardingHouseProfileObjectModel.class);
+
                 bhouseName.setText(boardingHouseProfileObjectModel.getName());
+            }
+        });
+        db.collection("users").document(reservationTicketObjectModel.getTenantId()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                name.setText(documentSnapshot.get("userName").toString());
             }
         });
         dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
@@ -207,6 +223,11 @@ public class MainActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
+        TextView status = (TextView) dialog.findViewById(R.id.status);
+        status.setText(reservationTicketObjectModel.getStatus());
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MMM-dd hh:mm aaa");
+        date.setText(format.format(reservationTicketObjectModel.getTimeStamp()) +"");
+        additionalInfo.setText(reservationTicketObjectModel.getAdditionalInformation());
     }
     void getBoardingHouseWithKeyWord(final String keyword){
         generalInformationObjectModelArrayList.clear();
@@ -276,14 +297,12 @@ public class MainActivity extends AppCompatActivity {
                                 }catch (NullPointerException ex){
 
                                 }
-
                             }
                         });
                     }
                 }catch (NullPointerException ex){
 
                 }
-
             }
         });
     }

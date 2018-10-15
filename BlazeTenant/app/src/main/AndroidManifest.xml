@@ -32,6 +32,10 @@
         <activity
             android:name=".activity.BoardingHouseProfileBotNav"
             android:label="@string/title_activity_boarding_house_profile_bot_nav"></activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
     </application>
 
 </manifest>

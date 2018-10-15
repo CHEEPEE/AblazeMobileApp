@@ -158,6 +158,7 @@ public class LoginActivity extends AppCompatActivity {
                             });
                         }catch (NullPointerException e){
                             System.out.println("users Exception " +e);
+                            reg();
                         }
                     }
                 },

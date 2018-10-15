@@ -33,7 +33,7 @@
             android:drawableStart="@drawable/ic_receipt_black_24dp"
             android:drawableTint="@color/colorPrimary"
             android:gravity="center"
-            android:text="Manage Tickets"
+            android:text="Manage Tenats"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -26,11 +26,20 @@ import android.widget.Toast;
 
 import com.blaze.ablazetenants.R;
 import com.blaze.ablazetenants.appModule.GlideApp;
+import com.blaze.ablazetenants.objectModels.BhouseLocationModel;
 import com.blaze.ablazetenants.objectModels.BoardingHouseProfileObjectModel;
 import com.blaze.ablazetenants.objectModels.GalleryObjectModel;
 import com.blaze.ablazetenants.objectModels.GeneralInformationObjectModel;
 import com.blaze.ablazetenants.views.GalleryRecyclerViewAdapter;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -52,6 +61,11 @@ public class ViewBoardingHouse extends AppCompatActivity {
     ArrayList<GalleryObjectModel> galleryObjectModelArrayList = new ArrayList<>();
     String numberToCall;
     BoardingHouseProfileObjectModel boardingHouseProfileObjectModel;
+    private GoogleMap mMap;
+    private Marker marker;
+    FirebaseFirestore db;
+    FirebaseAuth auth;
+
 
     FirebaseFirestore ref;
     @Override
@@ -80,8 +94,8 @@ public class ViewBoardingHouse extends AppCompatActivity {
                 onwerNumber.setText(boardingHouseProfileObjectModel.getContactNumber());
             }
         });
-
-
+        auth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
         FirebaseFirestore.getInstance()
                 .collection("generalInformation")
                 .document(key).addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -148,6 +162,32 @@ public class ViewBoardingHouse extends AppCompatActivity {
             }
         });
 
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                mMap = googleMap;
+                db.collection("bhouseLocation").document(key).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                        if (documentSnapshot.getData() !=null){
+                            BhouseLocationModel bhouseLocationModel = documentSnapshot.toObject(BhouseLocationModel.class);
+                            LatLng latLng = new LatLng(bhouseLocationModel.getLocationLatitude(),bhouseLocationModel.getLocationLongitude());
+                            if (mMap !=null){
+                                marker = mMap.addMarker(new MarkerOptions()
+                                        .position(latLng).title(boardingHouseProfileObjectModel.getName())
+                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN))
+                                        .draggable(false).visible(true));
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                        new LatLng(bhouseLocationModel.getLocationLatitude()
+                                                ,bhouseLocationModel.getLocationLongitude()), 15));
+                            }
+                        }
+                    }
+                });
+            }
+        });
     }
     void  getGallery(){
         galleryRecyclerViewAdapter = new GalleryRecyclerViewAdapter(context,galleryObjectModelArrayList,key);
@@ -175,7 +215,6 @@ public class ViewBoardingHouse extends AppCompatActivity {
 
     }
 
-
     private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 1234;
     public void yourfunction() {
         if (ContextCompat.checkSelfPermission(ViewBoardingHouse.this,
@@ -200,7 +239,6 @@ public class ViewBoardingHouse extends AppCompatActivity {
                 startActivity(callIntent);
             }
         });
-
     }
 
     @Override
@@ -274,21 +312,16 @@ public class ViewBoardingHouse extends AppCompatActivity {
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         dialog.show();
     }
-
     void openSms(){
         Intent sendIntent = new Intent(Intent.ACTION_VIEW);
         sendIntent.setData(Uri.parse("sms:"+boardingHouseProfileObjectModel.getContactNumber()));
         sendIntent.putExtra("sms_body","");
         startActivity(sendIntent);
     }
-
     void copyToClibBoard(){
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("userId", boardingHouseProfileObjectModel.getContactNumber());
         clipboard.setPrimaryClip(clip);
         Toast.makeText(ViewBoardingHouse.this,"Copy to Clipboard "+boardingHouseProfileObjectModel.getContactNumber(),Toast.LENGTH_SHORT).show();
     }
-
-
-
 }

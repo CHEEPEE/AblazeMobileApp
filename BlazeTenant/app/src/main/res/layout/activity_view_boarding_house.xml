@@ -58,6 +58,16 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/bhouseName" />
 
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bookReservation" />
+
             <TextView
                 android:id="@+id/bhouseName"
                 style="@style/TextTitle"
@@ -109,15 +119,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:fontFamily="@font/lato_light"
                 android:text="General Informations"
                 android:textAllCaps="true"
                 android:textColor="#2e2e2e"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/bhouseName"
-                app:layout_constraintTop_toBottomOf="@+id/bookReservation" />
-
+                app:layout_constraintTop_toBottomOf="@+id/map" />
 
             <TextView
                 android:id="@+id/rooms"
