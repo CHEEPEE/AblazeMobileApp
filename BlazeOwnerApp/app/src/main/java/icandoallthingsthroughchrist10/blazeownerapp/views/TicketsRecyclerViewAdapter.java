@@ -46,8 +46,6 @@ public class TicketsRecyclerViewAdapter
     public class MyViewHolder extends RecyclerView.ViewHolder{
         TextView tenantName,viewDetails, setTenantStatus,status,cancel;
         CircleImageView circleImageView;
-
-
         public MyViewHolder(View view){
             super(view);
             circleImageView = (CircleImageView) view.findViewById(R.id.circleImageView);
@@ -64,7 +62,6 @@ public class TicketsRecyclerViewAdapter
         this.reservationTicketObjectModels = galleryDataModels;
 
     }
-
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_reservation_ticket,parent,false);
@@ -135,7 +132,6 @@ public class TicketsRecyclerViewAdapter
 
     public interface OnItemClickLitener {
         void onItemClick(View view, int position, GalleryObjectModel galleryDataModel);
-
     }
 
     private OnItemClickLitener mOnItemClickLitener;
