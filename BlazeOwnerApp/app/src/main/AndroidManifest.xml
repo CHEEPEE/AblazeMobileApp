@@ -28,14 +28,23 @@
         <activity android:name=".ManageBoardingHouse" />
         <activity android:name=".SetUpBoardingHouse" />
         <activity android:name=".ManageGallery" />
-        <activity android:name=".MapsProfileUpdateActivity"/>
+        <activity android:name=".MapsProfileUpdateActivity" />
         <activity
             android:name=".BhouseProfileBotNav"
             android:label="@string/title_activity_bhouse_profile_bot_nav" />
-        <activity android:name=".ManageReservationTickets"></activity>
+        <activity android:name=".ManageReservationTickets" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+
+        <service android:name=".services.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity android:name=".AccountIsBlockOrPending"></activity>
     </application>
 
 </manifest>

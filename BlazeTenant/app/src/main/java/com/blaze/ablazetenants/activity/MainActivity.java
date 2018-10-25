@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 for (DocumentSnapshot documentSnapshot:queryDocumentSnapshots.getDocuments()){
                     reservationTicketObjectModel = documentSnapshot.toObject(ReservationTicketObjectModel.class);
-                    if (reservationTicketObjectModel.getStatus().equals("reserved")){
+                    if (reservationTicketObjectModel.getStatus().equals("reserved") || reservationTicketObjectModel.getStatus().equals("approved")){
                         ticketStatus.setColorFilter(getResources().getColor(R.color.colorGreen));
                     }
                 }

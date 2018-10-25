@@ -133,6 +133,13 @@ public class ManageBoardingHouse extends AppCompatActivity{
                    status.setText((object.getStatus().equals("pending"))? "Pending Approval": object.getStatus());
                    businessKey = object.getUserId();
                    getGallery();
+
+                   if (object.getStatus().equals("block")){
+                       Intent i = new Intent(ManageBoardingHouse.this,AccountIsBlockOrPending.class);
+                       startActivity(i);
+                       finish();
+                   }
+
                }catch (NullPointerException ex){
 
                }
