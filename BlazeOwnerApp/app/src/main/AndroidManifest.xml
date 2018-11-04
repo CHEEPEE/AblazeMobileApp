@@ -38,13 +38,16 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <service android:name=".services.MyFirebaseMessagingService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
+        <!-- <service android:name=".services.MyFirebaseMessagingService"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="com.google.firebase.MESSAGING_EVENT" /> -->
+        <!-- </intent-filter> -->
+        <!-- </service> -->
 
-        <activity android:name=".AccountIsBlockOrPending"></activity>
+        <activity android:name=".AccountIsBlockOrPending" />
+        <activity
+            android:name=".tabbedActivity.ManageTenantsAccountsBotNav"
+            android:label="@string/title_activity_manage_tenants_accounts_bot_nav"></activity>
     </application>
 
 </manifest>

@@ -13,7 +13,6 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,7 +25,6 @@ import com.blaze.ablazetenants.objectModels.GeneralInformationObjectModel;
 import com.blaze.ablazetenants.objectModels.ReservationTicketObjectModel;
 import com.blaze.ablazetenants.views.BoardingHouseListRecyclerViewAdapter;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.util.Util;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -37,11 +35,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -75,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         ticketStatus = (ImageView) findViewById(R.id.ticketStatus);
         boardingHouseRecyclerView = (RecyclerView)findViewById(R.id.boardingHouseRecyclerView);
         ticketStatus = (ImageView) findViewById(R.id.ticketStatus);
-        boardingHouseRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+        boardingHouseRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL));
         bHadapter =new BoardingHouseListRecyclerViewAdapter(MainActivity.this,generalInformationObjectModelArrayList);
         boardingHouseRecyclerView.setAdapter(bHadapter);
         getBoardingHouse();
@@ -115,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
                 if (reservationTicketObjectModel != null){
                     getTicketDetails();
                 }
-
             }
         });
     }
@@ -313,7 +307,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dlg_account_menu);
         Window window = dialog.getWindow();
-        dialog.findViewById(R.id.copy).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.notifyOwner).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 copyToClibBoard();

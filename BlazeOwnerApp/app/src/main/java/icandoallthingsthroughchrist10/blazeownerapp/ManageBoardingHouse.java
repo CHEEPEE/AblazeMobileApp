@@ -74,6 +74,7 @@ import icandoallthingsthroughchrist10.blazeownerapp.objectModel.BhouseLocationMo
 import icandoallthingsthroughchrist10.blazeownerapp.objectModel.BoardingHouseProfileObjectModel;
 import icandoallthingsthroughchrist10.blazeownerapp.objectModel.GalleryObjectModel;
 import icandoallthingsthroughchrist10.blazeownerapp.objectModel.GeneralInformationObjectModel;
+import icandoallthingsthroughchrist10.blazeownerapp.tabbedActivity.ManageTenantsAccountsBotNav;
 import icandoallthingsthroughchrist10.blazeownerapp.views.GalleryRecyclerViewAdapter;
 
 public class ManageBoardingHouse extends AppCompatActivity{
@@ -351,7 +352,7 @@ public class ManageBoardingHouse extends AppCompatActivity{
         dialog.findViewById(R.id.tickets).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(context,ManageReservationTickets.class);
+                Intent i = new Intent(context,ManageTenantsAccountsBotNav.class);
                 startActivity(i);
                 dialog.dismiss();
             }

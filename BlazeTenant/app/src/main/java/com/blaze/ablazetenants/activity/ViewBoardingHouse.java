@@ -26,10 +26,12 @@ import android.widget.Toast;
 
 import com.blaze.ablazetenants.R;
 import com.blaze.ablazetenants.appModule.GlideApp;
+import com.blaze.ablazetenants.objectModels.AccountThatNotifiedModel;
 import com.blaze.ablazetenants.objectModels.BhouseLocationModel;
 import com.blaze.ablazetenants.objectModels.BoardingHouseProfileObjectModel;
 import com.blaze.ablazetenants.objectModels.GalleryObjectModel;
 import com.blaze.ablazetenants.objectModels.GeneralInformationObjectModel;
+import com.blaze.ablazetenants.objectModels.NotifyOwnerModel;
 import com.blaze.ablazetenants.views.GalleryRecyclerViewAdapter;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -40,6 +42,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -276,7 +279,9 @@ public class ViewBoardingHouse extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-        TextView messenger = (TextView) dialog.findViewById(R.id.messenger);
+        final TextView notify = (TextView) dialog.findViewById(R.id.notifyOwner);
+        final TextView messenger = (TextView) dialog.findViewById(R.id.messenger);
+        final TextView messengerAvail = (TextView) dialog.findViewById(R.id.messengerAvail);
         messenger.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -284,6 +289,8 @@ public class ViewBoardingHouse extends AppCompatActivity {
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(boardingHouseProfileObjectModel.getMessengerId()));
                     startActivity(i);
                 }else {
+                    messengerAvail.setText("Messenger not Available");
+                    messengerAvail.setTextColor(getResources().getColor(R.color.colorRed));
                     Toast.makeText(context,"Messenger not Available",Toast.LENGTH_SHORT).show();
                 }
             }
@@ -300,17 +307,66 @@ public class ViewBoardingHouse extends AppCompatActivity {
                 openSms();
             }
         });
-        dialog.findViewById(R.id.copy).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.notifyOwner).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                copyToClibBoard();
+                notifyOwner(dialog);
             }
         });
 
+        db.collection("candidates").whereEqualTo("tenantAccountId",auth.getUid())
+                .whereEqualTo("ownerAccountId",boardingHouseProfileObjectModel.getUserId()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                    for (DocumentSnapshot documentSnapshot:queryDocumentSnapshots.getDocuments()){
+                        AccountThatNotifiedModel accountThatNotifiedModel = documentSnapshot.toObject(AccountThatNotifiedModel.class);
+                        System.out.println(accountThatNotifiedModel.isStatus());
+                        if (!accountThatNotifiedModel.isStatus()){
+                            if (android.os.Build.VERSION.SDK_INT >= 21){
+                                dialog.findViewById(R.id.notifyOwner).setBackground(getDrawable(R.drawable.button_background_disabled));
+                            }
+                            notify.setText("Notified");
+                            dialog.findViewById(R.id.notifyOwner).setClickable(false);
+                        }
+                    }
 
+            }
+        });
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         dialog.show();
+    }
+    void notifyOwner(final Dialog dialog){
+        String message = auth.getCurrentUser().getDisplayName()+" wants to have a bed space reservation";
+        String number =  numberFormater(boardingHouseProfileObjectModel.getContactNumber());
+        NotifyOwnerModel notifyOwnerModel = new NotifyOwnerModel(message,number);
+        db.collection("sendSms").document("details").set(notifyOwnerModel).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                dialog.dismiss();
+                addToCadidateList();
+            }
+        });
+    }
+    void addToCadidateList(){
+        String key =   db.collection("candidates").document().getId();
+        AccountThatNotifiedModel accountThatNotifiedModel = new AccountThatNotifiedModel(auth.getUid(),boardingHouseProfileObjectModel.getUserId(),false);
+        db.collection("candidates").document(key).set(accountThatNotifiedModel).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+            }
+        });
+    }
+    String numberFormater(String number){
+        String result = null;
+        if (number.length()==11){
+            result = "63"+(number.substring(1));
+        }else if(number.length() == 12){
+            result = number.substring(1);
+        }
+
+        return result;
     }
     void openSms(){
         Intent sendIntent = new Intent(Intent.ACTION_VIEW);

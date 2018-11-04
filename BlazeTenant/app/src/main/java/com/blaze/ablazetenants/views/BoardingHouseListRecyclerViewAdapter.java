@@ -41,6 +41,7 @@ public class BoardingHouseListRecyclerViewAdapter extends RecyclerView.Adapter<B
     public class MyViewHolder extends RecyclerView.ViewHolder{
     TextView bHouseName,price,space,viewBHouse;
     ImageView imageBanner;
+    ConstraintLayout container;
 
 
 
@@ -50,7 +51,8 @@ public class BoardingHouseListRecyclerViewAdapter extends RecyclerView.Adapter<B
             imageBanner = (ImageView) view.findViewById(R.id.imageBanner);
             price = (TextView) view.findViewById(R.id.price);
             space = (TextView) view.findViewById(R.id.spaceAvaliable);
-            viewBHouse = (TextView) view.findViewById(R.id.viewBHouse);
+            container = (ConstraintLayout) view.findViewById(R.id.container);
+//            viewBHouse = (TextView) view.findViewById(R.id.viewBHouse);
         }
     }
 
@@ -72,9 +74,9 @@ public class BoardingHouseListRecyclerViewAdapter extends RecyclerView.Adapter<B
         final GeneralInformationObjectModel generalInformationObjectModel = generalInformationObjectModelArrayList.get(position);
 
 
-        holder.price.setText("Php "+generalInformationObjectModel.getPrice()+"");
+        holder.price.setText("₱ "+generalInformationObjectModel.getPrice()+"");
         holder.space.setText("Space Available: "+generalInformationObjectModel.getAvailable()+"");
-        holder.viewBHouse.setOnClickListener(new View.OnClickListener() {
+        holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(context, ViewBoardingHouse.class);

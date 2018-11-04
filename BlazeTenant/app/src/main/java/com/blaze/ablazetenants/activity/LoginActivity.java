@@ -137,20 +137,20 @@ public class LoginActivity extends AppCompatActivity {
                         try {
                             FirebaseFirestore.getInstance()
                                     .collection("users")
-                                    .document(mAuth.getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                    .document(mAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                 @Override
-                                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
                                     if(documentSnapshot != null && documentSnapshot.exists()){
-                                    if (!documentSnapshot.get("userType").toString().equals(null)){
-                                        if (documentSnapshot.get("userType").toString().equals("tenant")){
-                                           reg();
+                                        if (!documentSnapshot.get("userType").toString().equals(null)){
+                                            if (documentSnapshot.get("userType").toString().equals("tenant")){
+                                               reg();
+                                            }else {
+                                                Toast.makeText(LoginActivity.this,"Boarding House owners cant Login Here",Toast.LENGTH_SHORT).show();
+                                                signOut();
+                                            }
                                         }else {
-                                            Toast.makeText(LoginActivity.this,"Boarding House owners cant Login Here",Toast.LENGTH_SHORT).show();
-                                            signOut();
+                                           reg();
                                         }
-                                    }else {
-                                       reg();
-                                    }
                                     }else {
                                        reg();
                                     }
@@ -158,7 +158,6 @@ public class LoginActivity extends AppCompatActivity {
                             });
                         }catch (NullPointerException e){
                             System.out.println("users Exception " +e);
-                            reg();
                         }
                     }
                 },

@@ -24,7 +24,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/copy"
+            android:id="@+id/notifyOwner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -50,8 +50,8 @@
             android:gravity="center"
             android:text="Logout"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/copy"
-            app:layout_constraintTop_toBottomOf="@+id/copy" />
+            app:layout_constraintStart_toStartOf="@+id/notifyOwner"
+            app:layout_constraintTop_toBottomOf="@+id/notifyOwner" />
 
         <TextView
             android:id="@+id/cancel"

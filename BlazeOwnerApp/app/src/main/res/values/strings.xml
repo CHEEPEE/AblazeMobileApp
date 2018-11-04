@@ -6,4 +6,13 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_bhouse_profile_bot_nav">BhouseProfileBotNav</string>
+    <string name="title_activity_manage_reseravation_accounts">ManageReseravationAccounts</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_manage_tenants_accounts_bot_nav">ManageTenantsAccountsBotNav
+    </string>
 </resources>

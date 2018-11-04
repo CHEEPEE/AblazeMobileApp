@@ -24,17 +24,20 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/copy"
+            android:id="@+id/notifyOwner"
+            style="@style/defaultButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="32dp"
             android:drawablePadding="10dp"
-            android:drawableStart="@drawable/ic_content_copy_black_24dp"
             android:drawableTint="@color/colorPrimary"
             android:gravity="center"
-            android:text="Copy Number to Clipboard"
+            android:text="Notify Owner"
+            android:textSize="12sp"
             android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -42,6 +45,8 @@
             android:id="@+id/call"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="32dp"
             android:drawablePadding="10dp"
             android:drawableStart="@drawable/ic_call_black_24dp"
@@ -49,14 +54,17 @@
             android:gravity="center"
             android:text="Call Owner"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/copy"
-            app:layout_constraintTop_toBottomOf="@+id/copy" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/notifyOwner" />
 
 
         <TextView
             android:id="@+id/mesage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="32dp"
             android:drawablePadding="10dp"
             android:drawableStart="@drawable/ic_chat_black_24dp"
@@ -64,7 +72,8 @@
             android:gravity="center"
             android:text="Send A SMS"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/call"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/call" />
 
 
@@ -72,21 +81,24 @@
             android:id="@+id/messenger"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="32dp"
             android:drawablePadding="10dp"
             android:drawableStart="@drawable/ic_messenger"
             android:gravity="center"
             android:text="Chat on Messenger"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/call"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mesage" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
+            android:id="@+id/messengerAvail"
             android:layout_marginStart="8dp"
-            android:text="(Coming Soon)"
             android:textSize="10sp"
             app:layout_constraintEnd_toEndOf="@+id/messenger"
             app:layout_constraintStart_toStartOf="@+id/messenger"

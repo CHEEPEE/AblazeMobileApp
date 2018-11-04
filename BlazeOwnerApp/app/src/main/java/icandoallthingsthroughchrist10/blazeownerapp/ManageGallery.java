@@ -235,7 +235,6 @@ public class ManageGallery extends AppCompatActivity {
                 }
             });
         }
-
     }
     private String getFileName(Uri uri) {
 
