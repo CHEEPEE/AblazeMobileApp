@@ -61,6 +61,4 @@ public class FragManageCandiddatesTenantsTickets extends Fragment {
 
         return view;
     }
-
-
 }
