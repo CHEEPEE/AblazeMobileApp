@@ -215,7 +215,6 @@ public class ViewBoardingHouse extends AppCompatActivity {
                 });
         SnapHelper snapHelper = new LinearSnapHelper();
         snapHelper.attachToRecyclerView(imageGalList);
-
     }
 
     private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 1234;
@@ -350,7 +349,7 @@ public class ViewBoardingHouse extends AppCompatActivity {
     }
     void addToCadidateList(){
         String key =   db.collection("candidates").document().getId();
-        AccountThatNotifiedModel accountThatNotifiedModel = new AccountThatNotifiedModel(auth.getUid(),boardingHouseProfileObjectModel.getUserId(),false);
+        AccountThatNotifiedModel accountThatNotifiedModel = new AccountThatNotifiedModel(key,auth.getUid(),boardingHouseProfileObjectModel.getUserId(),false);
         db.collection("candidates").document(key).set(accountThatNotifiedModel).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

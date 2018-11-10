@@ -29,10 +29,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+import icandoallthingsthroughchrist10.blazeownerapp.AccountIsBlockOrPending;
 import icandoallthingsthroughchrist10.blazeownerapp.ManageReservationTickets;
 import icandoallthingsthroughchrist10.blazeownerapp.R;
+import icandoallthingsthroughchrist10.blazeownerapp.objectModel.AccountThatNotifiedModel;
 import icandoallthingsthroughchrist10.blazeownerapp.objectModel.GeneralInformationObjectModel;
 import icandoallthingsthroughchrist10.blazeownerapp.objectModel.ReservationTicketObjectModel;
+import icandoallthingsthroughchrist10.blazeownerapp.views.CandidatesRecyclerViewAdapter;
 import icandoallthingsthroughchrist10.blazeownerapp.views.TicketsRecyclerViewAdapter;
 
 public class FragManageCandiddatesTenantsTickets extends Fragment {
@@ -40,11 +43,10 @@ public class FragManageCandiddatesTenantsTickets extends Fragment {
     FirebaseFirestore db;
     FirebaseAuth firebaseAuth;
     String uid;
-    TextView available;
-    RecyclerView ticketList;
-    Context context;
-    ArrayList<ReservationTicketObjectModel> reservationTicketObjectModels = new ArrayList<>();
-    TicketsRecyclerViewAdapter ticketsRecyclerViewAdapter;
+    ArrayList<AccountThatNotifiedModel> accountThatNotifiedModels = new ArrayList<>();
+    CandidatesRecyclerViewAdapter candidatesRecyclerViewAdapter;
+    RecyclerView candidatesList;
+
     public FragManageCandiddatesTenantsTickets(){
 
     }
@@ -57,8 +59,27 @@ public class FragManageCandiddatesTenantsTickets extends Fragment {
         db = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         uid = firebaseAuth.getUid();
-
-
+        candidatesList = (RecyclerView) view.findViewById(R.id.candidatesList);
+        candidatesRecyclerViewAdapter = new CandidatesRecyclerViewAdapter(getContext(),accountThatNotifiedModels);
+        candidatesList.setAdapter(candidatesRecyclerViewAdapter);
+        candidatesList.setLayoutManager(new LinearLayoutManager(getContext()));
+        getCandidates();
         return view;
     }
+
+    void getCandidates(){
+        db.collection("candidates").whereEqualTo("ownerAccountId",uid).whereEqualTo("status",false).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+            accountThatNotifiedModels.clear();
+            for (DocumentSnapshot documentSnapshot:queryDocumentSnapshots.getDocuments()){
+                AccountThatNotifiedModel accountThatNotifiedModel = documentSnapshot.toObject(AccountThatNotifiedModel.class);
+                accountThatNotifiedModels.add(accountThatNotifiedModel);
+            }
+            candidatesRecyclerViewAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+
 }

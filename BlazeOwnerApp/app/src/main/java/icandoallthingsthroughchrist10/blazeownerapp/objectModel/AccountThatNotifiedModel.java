@@ -1,4 +1,4 @@
-package com.blaze.ablazetenants.objectModels;
+package icandoallthingsthroughchrist10.blazeownerapp.objectModel;
 
 import com.google.firebase.firestore.ServerTimestamp;
 
@@ -20,7 +20,7 @@ public class AccountThatNotifiedModel {
     public AccountThatNotifiedModel(){
 
     }
-    public AccountThatNotifiedModel(String key,String tenantAccountId,String ownerAccountId,boolean status
+    public AccountThatNotifiedModel(String key, String tenantAccountId, String ownerAccountId, boolean status
     ){
         this.tenantAccountId = tenantAccountId;
         this.ownerAccountId = ownerAccountId;
