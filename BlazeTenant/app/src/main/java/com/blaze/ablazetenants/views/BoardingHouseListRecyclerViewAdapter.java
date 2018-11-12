@@ -39,7 +39,7 @@ public class BoardingHouseListRecyclerViewAdapter extends RecyclerView.Adapter<B
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
-    TextView bHouseName,price,space,viewBHouse;
+    TextView bHouseName,price,space,viewBHouse,location;
     ImageView imageBanner;
     ConstraintLayout container;
 
@@ -52,6 +52,7 @@ public class BoardingHouseListRecyclerViewAdapter extends RecyclerView.Adapter<B
             price = (TextView) view.findViewById(R.id.price);
             space = (TextView) view.findViewById(R.id.spaceAvaliable);
             container = (ConstraintLayout) view.findViewById(R.id.container);
+            location = (TextView) view.findViewById(R.id.location);
 //            viewBHouse = (TextView) view.findViewById(R.id.viewBHouse);
         }
     }
@@ -91,6 +92,7 @@ public class BoardingHouseListRecyclerViewAdapter extends RecyclerView.Adapter<B
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                  BoardingHouseProfileObjectModel houseProfileObjectModel = documentSnapshot.toObject(BoardingHouseProfileObjectModel.class);
                  holder.bHouseName.setText(houseProfileObjectModel.getName());
+                 holder.location.setText(houseProfileObjectModel.getAddress());
 
             }
         });
