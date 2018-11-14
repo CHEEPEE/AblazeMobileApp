@@ -309,26 +309,44 @@ public class ViewBoardingHouse extends AppCompatActivity {
         dialog.findViewById(R.id.notifyOwner).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                notifyOwner(dialog);
+
+                db.collection("candidates").whereEqualTo("tenantAccountId",auth.getUid())
+                        .whereEqualTo("ownerAccountId",boardingHouseProfileObjectModel.getUserId())
+                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                       if(queryDocumentSnapshots.getDocuments().size()==0){
+                           notifyOwner(dialog);
+                       }else {
+                           if (android.os.Build.VERSION.SDK_INT >= 21){
+                               dialog.findViewById(R.id.notifyOwner).setBackground(getDrawable(R.drawable.button_background_disabled));
+                           }
+                       }
+                    }
+                });
             }
         });
 
         db.collection("candidates").whereEqualTo("tenantAccountId",auth.getUid())
-                .whereEqualTo("ownerAccountId",boardingHouseProfileObjectModel.getUserId()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+                .whereEqualTo("ownerAccountId",boardingHouseProfileObjectModel.getUserId())
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                    for (DocumentSnapshot documentSnapshot:queryDocumentSnapshots.getDocuments()){
-                        AccountThatNotifiedModel accountThatNotifiedModel = documentSnapshot.toObject(AccountThatNotifiedModel.class);
-                        System.out.println(accountThatNotifiedModel.isStatus());
-                        if (!accountThatNotifiedModel.isStatus()){
-                            if (android.os.Build.VERSION.SDK_INT >= 21){
-                                dialog.findViewById(R.id.notifyOwner).setBackground(getDrawable(R.drawable.button_background_disabled));
+                    if (queryDocumentSnapshots.getDocuments().size() == 0){
+                        for (DocumentSnapshot documentSnapshot:queryDocumentSnapshots.getDocuments()){
+                            AccountThatNotifiedModel accountThatNotifiedModel = documentSnapshot.toObject(AccountThatNotifiedModel.class);
+                            System.out.println(accountThatNotifiedModel.isStatus());
+                            if (!accountThatNotifiedModel.isStatus()){
+                                if (android.os.Build.VERSION.SDK_INT >= 21){
+                                    dialog.findViewById(R.id.notifyOwner).setBackground(getDrawable(R.drawable.button_background_disabled));
+                                }
+                                notify.setText("Notified");
+                                dialog.findViewById(R.id.notifyOwner).setClickable(false);
                             }
-                            notify.setText("Notified");
-                            dialog.findViewById(R.id.notifyOwner).setClickable(false);
                         }
+                    }else {
+                        dialog.findViewById(R.id.notifyOwner).setBackground(getDrawable(R.drawable.button_background_disabled));
                     }
-
             }
         });
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);

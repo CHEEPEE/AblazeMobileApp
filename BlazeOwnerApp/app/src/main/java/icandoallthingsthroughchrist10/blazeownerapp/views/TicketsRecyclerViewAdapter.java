@@ -236,6 +236,7 @@ public class TicketsRecyclerViewAdapter
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         TextView block = (TextView) dialog.findViewById(R.id.block);
+        block.setText("Block Tenant");
         TextView cancel = (TextView) dialog.findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
