@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/bhouseName"
+                style="@style/TextTitle"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="Boarding House Name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/bookReservation"
+                style="@style/defaultButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Book A Reservation"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/onwerNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Number"
+                app:layout_constraintBottom_toBottomOf="@id/imgMsg"
+                app:layout_constraintEnd_toEndOf="@+id/bookReservation"
+                app:layout_constraintStart_toStartOf="@+id/bookReservation"
+                app:layout_constraintTop_toBottomOf="@+id/bookReservation" />
+
+            <ImageView
+                android:id="@+id/app_bar_image"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="8dp"
+                android:scaleType="centerCrop"
+                android:src="@android:drawable/sym_def_app_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/onwerNumber" />
+
+
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/description" />
+
+            <TextView
+                android:id="@+id/location"
+                style="@style/defaultButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="8dp"
+                android:text="location"
+                android:gravity="center"
+                android:paddingBottom="1dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="16dp"
+                android:paddingTop="1dp"
+                android:drawableTint="@color/colorWhite"
+                android:drawableStart="@drawable/ic_location_on_black_24dp"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@+id/map"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/lato_light"
+                android:text="General Informations"
+                android:textAllCaps="true"
+                android:textColor="#2e2e2e"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/bhouseName"
+                app:layout_constraintTop_toBottomOf="@+id/app_bar_image" />
+
+            <TextView
+                android:id="@+id/rooms"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:drawablePadding="10dp"
+                android:drawableTint="@color/colorPrimary"
+                android:gravity="center"
+                android:text="Bed Space Available"
+                android:textSize="8sp"
+                app:layout_constraintStart_toStartOf="@+id/textView9"
+                app:layout_constraintTop_toBottomOf="@+id/priceVal" />
+
+            <TextView
+                android:id="@+id/spaceVal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Avaialbe Space"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/rooms"
+                app:layout_constraintTop_toBottomOf="@+id/rooms" />
+
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:drawablePadding="10dp"
+                android:drawableTint="@color/colorPrimary"
+                android:gravity="center"
+                android:text="Price"
+                android:textSize="8sp"
+                app:layout_constraintStart_toStartOf="@+id/textView9"
+                app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+            <TextView
+                android:id="@+id/priceVal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Price Value"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/price"
+                app:layout_constraintTop_toBottomOf="@+id/price" />
+
+            <TextView
+                android:id="@+id/bedSpacePerRoom"
+                android:layout_width="wrap_content"
+                android:layout_height="17dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:drawablePadding="10dp"
+                android:drawableTint="@color/colorPrimary"
+                android:gravity="center"
+                android:text="Bed space Room Capacity"
+                android:textSize="8sp"
+                app:layout_constraintStart_toStartOf="@+id/textView9"
+                app:layout_constraintTop_toBottomOf="@+id/spaceVal" />
+
+            <TextView
+                android:id="@+id/capacityVal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Capacty Value"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/bedSpacePerRoom"
+                app:layout_constraintTop_toBottomOf="@+id/bedSpacePerRoom" />
+
+            <TextView
+                android:id="@+id/text1"
+                android:layout_width="wrap_content"
+                android:layout_height="17dp"
+                android:layout_marginTop="8dp"
+                android:drawablePadding="10dp"
+                android:drawableTint="@color/colorPrimary"
+                android:gravity="center"
+                android:text="Room Price"
+                android:textSize="8sp"
+                app:layout_constraintStart_toStartOf="@+id/capacityVal"
+                app:layout_constraintTop_toBottomOf="@+id/capacityVal" />
+
+            <TextView
+                android:id="@+id/roomPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Room Price"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/text1"
+                app:layout_constraintTop_toBottomOf="@+id/text1" />
+
+
+            <TextView
+                android:id="@+id/text2"
+                android:layout_width="wrap_content"
+                android:layout_height="17dp"
+                android:layout_marginTop="8dp"
+                android:drawablePadding="10dp"
+                android:drawableTint="@color/colorPrimary"
+                android:gravity="center"
+                android:text="Room Capacity"
+                android:textSize="8sp"
+                app:layout_constraintStart_toStartOf="@+id/capacityVal"
+                app:layout_constraintTop_toBottomOf="@+id/roomPrice" />
+
+            <TextView
+                android:id="@+id/roomRevCapacity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Room Capacity"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/text2"
+                app:layout_constraintTop_toBottomOf="@+id/text2" />
+
+            <TextView
+                android:id="@+id/text3"
+                android:layout_width="wrap_content"
+                android:layout_height="17dp"
+                android:layout_marginTop="8dp"
+                android:drawablePadding="10dp"
+                android:drawableTint="@color/colorPrimary"
+                android:gravity="center"
+                android:text="Available Rooms for Reservation"
+                android:textSize="8sp"
+                app:layout_constraintStart_toStartOf="@+id/capacityVal"
+                app:layout_constraintTop_toBottomOf="@+id/roomRevCapacity" />
+
+            <TextView
+                android:id="@+id/availRoomForReservation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Room Available"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/text3"
+                app:layout_constraintTop_toBottomOf="@+id/text3" />
+
+
+            <TextView
+                android:id="@+id/electBill"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:drawablePadding="8dp"
+                android:drawableStart="@drawable/ic_check_circle_black_24dp"
+                android:drawableTint="@color/colorGreen"
+                android:gravity="center"
+                android:text="Metered Electric Bill Charges"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="@+id/capacityVal"
+                app:layout_constraintTop_toBottomOf="@+id/availRoomForReservation" />
+
+            <TextView
+                android:id="@+id/waterbill"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:drawablePadding="8dp"
+                android:drawableStart="@drawable/ic_check_circle_black_24dp"
+                android:drawableTint="@color/colorGreen"
+                android:gravity="center"
+                android:text="Metered Water Bill Charges"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="@+id/capacityVal"
+                app:layout_constraintTop_toBottomOf="@+id/electBill" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="24dp"
+                android:text="Additional Information"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/waterbill"
+                app:layout_constraintTop_toBottomOf="@+id/waterbill" />
+
+            <TextView
+                android:id="@+id/textView4"
+                style="@style/TextTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/lato_light"
+                android:text="Gallery"
+                android:textAllCaps="true"
+                android:textColor="#2e2e2e"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@+id/textView9"
+                app:layout_constraintTop_toBottomOf="@+id/map" />
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="420dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:id="@+id/galList"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+
+
+
+
+
+</android.support.constraint.ConstraintLayout>

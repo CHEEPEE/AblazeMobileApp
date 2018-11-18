@@ -9,6 +9,9 @@ public class GeneralInformationObjectModel {
     private int price;
     private int available;
     private int roomCapacity;
+    private int roomRevCapacity;
+    private int roomPrice;
+    private int roomAvailable;
     private boolean waterBil;
     private boolean currentBill;
     private String description;
@@ -18,7 +21,16 @@ public class GeneralInformationObjectModel {
 
     }
     public GeneralInformationObjectModel(String userId,
-            int price,int available,int roomCapacity,boolean waterBil,boolean currentBill,String description,String roomType
+                                         int price,
+                                         int available,
+                                         int roomCapacity,
+                                         boolean waterBil,
+                                         boolean currentBill,
+                                         String description,
+                                         String roomType,
+                                         int roomRevCapacity,
+                                         int roomAvailable,
+                                         int roomPrice
     ){
         this.userId = userId;
         this.price = price;
@@ -28,7 +40,9 @@ public class GeneralInformationObjectModel {
         this.currentBill = currentBill;
         this.description = description;
         this.roomType = roomType;
-
+        this.roomRevCapacity = roomRevCapacity;
+        this.roomAvailable = roomAvailable;
+        this.roomPrice = roomPrice;
     }
 
     public String getUserId() {
@@ -63,5 +77,16 @@ public class GeneralInformationObjectModel {
         return roomType;
     }
 
+    public int getRoomPrice() {
+        return roomPrice;
+    }
+
+    public int getRoomAvailable() {
+        return roomAvailable;
+    }
+
+    public int getRoomRevCapacity() {
+        return roomRevCapacity;
+    }
 
 }

@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Add Reservation"
+        android:text="Input Name"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/houseName"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,43 +27,26 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:hint="Put Account Code here"
+        android:hint="Boarding House Name"
         android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView13" />
 
-    <EditText
-        android:id="@+id/additionInfo"
-        style="@style/TextInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:hint="Additional Information Here"
-        android:textSize="10sp"
-        android:lines="10"
-        android:gravity="start"
-        app:layout_constraintEnd_toEndOf="@+id/houseName"
-        app:layout_constraintStart_toStartOf="@+id/houseName"
-        app:layout_constraintTop_toBottomOf="@+id/houseName" />
-
 
     <TextView
-        android:id="@+id/saveAccountCode"
+        android:id="@+id/save"
         style="@style/defaultButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:text="Add Resevation"
+        android:layout_marginTop="32dp"
+        android:text="Send Change Name Request"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintHorizontal_bias="0.445"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/additionInfo"
-        app:layout_constraintVertical_bias="1.0" />
-
-
+        app:layout_constraintTop_toBottomOf="@+id/houseName" />
 </android.support.constraint.ConstraintLayout>

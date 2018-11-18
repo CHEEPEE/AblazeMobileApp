@@ -56,7 +56,18 @@ import javax.annotation.Nullable;
 
 public class ViewBoardingHouse extends AppCompatActivity {
     String key;
-    TextView bhouseName,priceVal,spaceVal,capacityVal,waterBill,electBill,onwerNumber,bookReservation,description;
+    TextView bhouseName,
+            priceVal,
+            spaceVal,
+            capacityVal,
+            waterBill,
+            electBill,
+            onwerNumber,
+            bookReservation,
+            description,
+            roomPrice,
+            roomRevCapacity,
+            roomsAvailalbe,location;
     ImageView app_bar_image;
     Context context;
     RecyclerView imageGalList;
@@ -74,7 +85,7 @@ public class ViewBoardingHouse extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_boarding_house);
+        setContentView(R.layout.act_view_boarding_house);
         key = getIntent().getExtras().getString("key");
         context = ViewBoardingHouse.this;
         bhouseName = (TextView) findViewById(R.id.bhouseName);
@@ -89,12 +100,18 @@ public class ViewBoardingHouse extends AppCompatActivity {
         imageGalList = (RecyclerView) findViewById(R.id.galList);
         bookReservation = (TextView) findViewById(R.id.bookReservation);
         description = (TextView) findViewById(R.id.description);
+        roomPrice = (TextView) findViewById(R.id.roomPrice);
+        roomRevCapacity = (TextView) findViewById(R.id.roomRevCapacity);
+        roomsAvailalbe = (TextView)findViewById(R.id.availRoomForReservation);
+        location = (TextView) findViewById(R.id.location);
+
         ref.collection("houseProfiles").document(key).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 boardingHouseProfileObjectModel = documentSnapshot.toObject(BoardingHouseProfileObjectModel.class);
                 bhouseName.setText(boardingHouseProfileObjectModel.getName());
                 onwerNumber.setText(boardingHouseProfileObjectModel.getContactNumber());
+                location.setText(boardingHouseProfileObjectModel.getAddress());
             }
         });
         auth = FirebaseAuth.getInstance();
@@ -114,6 +131,9 @@ public class ViewBoardingHouse extends AppCompatActivity {
                         spaceVal.setText("Space Available: "+generalInformationObjectModel.getAvailable()+"");
                         capacityVal.setText(generalInformationObjectModel.getRoomCapacity()+" beds per room");
                         description.setText(generalInformationObjectModel.getDescription());
+                        roomPrice.setText(generalInformationObjectModel.getRoomPrice()+"");
+                        roomRevCapacity.setText(generalInformationObjectModel.getRoomRevCapacity()+"");
+                        roomsAvailalbe.setText(generalInformationObjectModel.getRoomAvailable()+"");
                         if (generalInformationObjectModel.isCurrentBill()){
                             electBill.setVisibility(View.VISIBLE);
                         }else {
@@ -152,12 +172,6 @@ public class ViewBoardingHouse extends AppCompatActivity {
                 });
         getGallery();
 
-        findViewById(R.id.imgCall).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                yourfunction();
-            }
-        });
         bookReservation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

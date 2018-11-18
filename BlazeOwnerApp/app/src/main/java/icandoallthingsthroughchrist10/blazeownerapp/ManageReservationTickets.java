@@ -74,7 +74,7 @@ public class ManageReservationTickets extends AppCompatActivity {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.dlg_add_ticket);
-        final EditText accountCode = (EditText) dialog.findViewById(R.id.account_code);
+        final EditText accountCode = (EditText) dialog.findViewById(R.id.houseName);
         final EditText additionalInfo = (EditText) dialog.findViewById(R.id.additionInfo);
         final TextView saveAccountCode = (TextView) dialog.findViewById(R.id.saveAccountCode);
         saveAccountCode.setOnClickListener(new View.OnClickListener() {

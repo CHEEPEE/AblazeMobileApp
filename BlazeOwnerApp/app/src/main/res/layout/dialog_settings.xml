@@ -9,7 +9,7 @@
     >
 
     <android.support.constraint.ConstraintLayout
-        android:layout_width="200dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
@@ -23,21 +23,35 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            android:id="@+id/nameChange"
+            android:layout_width="wrap_content"
+            android:layout_height="22dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="32dp"
+            android:drawablePadding="10dp"
+            android:drawableStart="@drawable/ic_edit_black_24dp"
+            android:drawableTint="@color/colorPrimary"
+            android:text="Request Name Change"
+            android:textColor="@color/lightgrey"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
             android:id="@+id/tickets"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:drawablePadding="10dp"
             android:drawableStart="@drawable/ic_receipt_black_24dp"
             android:drawableTint="@color/colorPrimary"
             android:gravity="center"
             android:text="Manage Tenats"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="@+id/nameChange"
+            app:layout_constraintTop_toBottomOf="@+id/nameChange" />
 
 
         <TextView

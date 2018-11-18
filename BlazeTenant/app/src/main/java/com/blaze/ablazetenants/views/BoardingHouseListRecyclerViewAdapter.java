@@ -39,7 +39,7 @@ public class BoardingHouseListRecyclerViewAdapter extends RecyclerView.Adapter<B
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
-    TextView bHouseName,price,space,viewBHouse,location;
+    TextView bHouseName,price,space,viewBHouse,location,rooms,roomPrice;
     ImageView imageBanner;
     ConstraintLayout container;
 
@@ -53,6 +53,9 @@ public class BoardingHouseListRecyclerViewAdapter extends RecyclerView.Adapter<B
             space = (TextView) view.findViewById(R.id.spaceAvaliable);
             container = (ConstraintLayout) view.findViewById(R.id.container);
             location = (TextView) view.findViewById(R.id.location);
+            rooms = (TextView) view.findViewById(R.id.roomsAvailable);
+            roomPrice = (TextView) view.findViewById(R.id.roomPrice);
+
 //            viewBHouse = (TextView) view.findViewById(R.id.viewBHouse);
         }
     }
@@ -77,6 +80,13 @@ public class BoardingHouseListRecyclerViewAdapter extends RecyclerView.Adapter<B
 
         holder.price.setText("₱ "+generalInformationObjectModel.getPrice()+"");
         holder.space.setText("Space Available: "+generalInformationObjectModel.getAvailable()+"");
+        try {
+            holder.rooms.setText("Rooms Availalbe: "+generalInformationObjectModel.getRoomAvailable());
+            holder.roomPrice.setText("₱ "+generalInformationObjectModel.getRoomPrice());
+        }catch (NullPointerException ex){
+            holder.rooms.setText("N/A");
+            holder.roomPrice.setText("N/A");
+        }
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,8 +101,13 @@ public class BoardingHouseListRecyclerViewAdapter extends RecyclerView.Adapter<B
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                  BoardingHouseProfileObjectModel houseProfileObjectModel = documentSnapshot.toObject(BoardingHouseProfileObjectModel.class);
-                 holder.bHouseName.setText(houseProfileObjectModel.getName());
-                 holder.location.setText(houseProfileObjectModel.getAddress());
+                 try {
+                     holder.bHouseName.setText(houseProfileObjectModel.getName());
+                     holder.location.setText(houseProfileObjectModel.getAddress());
+
+                 }catch (NullPointerException ex){
+
+                 }
 
             }
         });

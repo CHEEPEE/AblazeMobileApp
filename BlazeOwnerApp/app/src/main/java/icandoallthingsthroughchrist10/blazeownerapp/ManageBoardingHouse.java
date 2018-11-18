@@ -74,6 +74,7 @@ import icandoallthingsthroughchrist10.blazeownerapp.objectModel.BhouseLocationMo
 import icandoallthingsthroughchrist10.blazeownerapp.objectModel.BoardingHouseProfileObjectModel;
 import icandoallthingsthroughchrist10.blazeownerapp.objectModel.GalleryObjectModel;
 import icandoallthingsthroughchrist10.blazeownerapp.objectModel.GeneralInformationObjectModel;
+import icandoallthingsthroughchrist10.blazeownerapp.objectModel.NameChangeRequest;
 import icandoallthingsthroughchrist10.blazeownerapp.tabbedActivity.ManageTenantsAccountsBotNav;
 import icandoallthingsthroughchrist10.blazeownerapp.views.GalleryRecyclerViewAdapter;
 
@@ -87,7 +88,7 @@ public class ManageBoardingHouse extends AppCompatActivity{
     String businessKey;
     FirebaseAuth auth;
     FirebaseFirestore db;
-    TextView name,owner,address,mail,number,status,setting,priceVal, spaceVal,capacityVal,manageGallery,des;
+    TextView name,owner,address,mail,number,status,setting,priceVal, spaceVal,capacityVal,manageGallery,des,roomPrice,roomCapacity,roomAvailable;
     Context context;
     RecyclerView imageGalList;
     GalleryRecyclerViewAdapter galleryRecyclerViewAdapter;
@@ -99,7 +100,7 @@ public class ManageBoardingHouse extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_manage_boarding_house);
+        setContentView(R.layout.act_manage_boarding_house);
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         context = ManageBoardingHouse.this;
@@ -116,6 +117,9 @@ public class ManageBoardingHouse extends AppCompatActivity{
         manageGallery = (TextView) findViewById(R.id.manageGallery);
         imageGalList = (RecyclerView) findViewById(R.id.imageGalList);
         editContact = (ImageView) findViewById(R.id.editContact);
+        roomPrice = (TextView) findViewById(R.id.roomPriceVal);
+        roomCapacity = (TextView) findViewById(R.id.roomCapacityVal);
+        roomAvailable = (TextView) findViewById(R.id.roomRevAvailVal);
         des = (TextView) findViewById(R.id.desciption);
 
         update_map = (ImageView) findViewById(R.id.update_map);
@@ -267,6 +271,9 @@ public class ManageBoardingHouse extends AppCompatActivity{
                         priceVal.setText(generalInformationObjectModel.getPrice()+"");
                         spaceVal.setText(generalInformationObjectModel.getAvailable()+"");
                         capacityVal.setText(generalInformationObjectModel.getRoomCapacity()+"");
+                        roomPrice.setText(generalInformationObjectModel.getRoomPrice()+"");
+                        roomAvailable.setText(generalInformationObjectModel.getRoomAvailable()+"");
+                        roomCapacity.setText(generalInformationObjectModel.getRoomRevCapacity()+"");
                         des.setText(generalInformationObjectModel.getDescription());
                     }catch (NullPointerException ex){
 
@@ -369,6 +376,13 @@ public class ManageBoardingHouse extends AppCompatActivity{
                 signOut();
             }
         });
+        dialog.findViewById(R.id.nameChange).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nameChangeRequest();
+                dialog.dismiss();
+            }
+        });
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         dialog.show();
@@ -376,7 +390,7 @@ public class ManageBoardingHouse extends AppCompatActivity{
     void updateGenInfo(){
         final Dialog dialog = new Dialog(ManageBoardingHouse.this);
 
-        final EditText price,available,roomcapacity,description;
+        final EditText price,available,roomcapacity,description,roomRevCapacity,roomAvailable,roomPrice;
         final CheckBox waterBill,curretBill;
 
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -399,18 +413,21 @@ public class ManageBoardingHouse extends AppCompatActivity{
         curretBill = (CheckBox) dialog.findViewById(R.id.currentBill);
         waterBill = (CheckBox) dialog.findViewById(R.id.waterBill);
         description = (EditText) dialog.findViewById(R.id.desciption);
+        roomRevCapacity = (EditText) dialog.findViewById(R.id.roomRevCapacity);
+        roomAvailable = (EditText) dialog.findViewById(R.id.availableRooms);
+        roomPrice = (EditText) dialog.findViewById(R.id.roomPrice);
+
+
 
         roomcapacity.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
             }
-
             @Override
             public void afterTextChanged(Editable s) {
                 try {
@@ -492,6 +509,9 @@ public class ManageBoardingHouse extends AppCompatActivity{
                         waterBill.setChecked(generalInformationObjectModel.isWaterBil());
                         curretBill.setChecked(generalInformationObjectModel.isCurrentBill());
                         description.setText(generalInformationObjectModel.getDescription());
+                        roomRevCapacity.setText(generalInformationObjectModel.getRoomRevCapacity()+"");
+                        roomAvailable.setText(generalInformationObjectModel.getRoomAvailable()+"");
+                        roomPrice.setText(generalInformationObjectModel.getRoomPrice()+"");
                     }catch (NullPointerException ex){
 
                     }
@@ -506,24 +526,34 @@ public class ManageBoardingHouse extends AppCompatActivity{
             @Override
             public void onClick(View v) {
 
-                GeneralInformationObjectModel generalInformationObjectModel =
-                        new GeneralInformationObjectModel(auth.getUid(),
-                                Integer.parseInt(price.getText().toString()),
-                                Integer.parseInt(available.getText().toString()),
-                                Integer.parseInt(roomcapacity.getText().toString()),
-                                waterBill.isChecked(),
-                                curretBill.isChecked(),
-                                description.getText().toString(),"roomtype"
+                try{
+                    try {
+                        GeneralInformationObjectModel generalInformationObjectModel =
+                                new GeneralInformationObjectModel(auth.getUid(),
+                                        Integer.parseInt(price.getText().toString()),
+                                        Integer.parseInt(available.getText().toString()),
+                                        Integer.parseInt(roomcapacity.getText().toString()),
+                                        waterBill.isChecked(),
+                                        curretBill.isChecked(),
+                                        description.getText().toString(),"roomtype",
+                                        Integer.parseInt(roomRevCapacity.getText().toString()),
+                                        Integer.parseInt(roomAvailable.getText().toString()),
+                                        Integer.parseInt(roomPrice.getText().toString())
                                 );
-
-                FirebaseFirestore.getInstance()
-                        .collection("generalInformation")
-                        .document(auth.getUid()).set(generalInformationObjectModel).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        dialog.dismiss();
+                        FirebaseFirestore.getInstance()
+                                .collection("generalInformation")
+                                .document(auth.getUid()).set(generalInformationObjectModel).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                dialog.dismiss();
+                            }
+                        });
+                    }catch (NumberFormatException e){
+                        Toast.makeText(context,"Please Fill Up Everything",Toast.LENGTH_SHORT).show();
                     }
-                });
+                }catch (NullPointerException e){
+                    Toast.makeText(context,"Please Fill Up Everything",Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -695,6 +725,39 @@ public class ManageBoardingHouse extends AppCompatActivity{
             }
         });
     }
+
+    void nameChangeRequest(){
+        final Dialog dialog = new Dialog(ManageBoardingHouse.this);
+
+
+
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.dlg_new_name);
+
+        final EditText newName = (EditText) dialog.findViewById(R.id.houseName);
+        Window window = dialog.getWindow();
+        dialog.show();
+        dialog.findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (newName.getText().toString().trim().length() != 0){
+                    NameChangeRequest nameChangeRequest = new NameChangeRequest(auth.getUid(),newName.getText().toString());
+                    db.collection("changeNameRequest").document(auth.getUid()).set(nameChangeRequest).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(context,"Boarding house name change name request sent",Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }
+                    });
+                }else {
+                    Toast.makeText(context,"FIll out new name",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
 
 
 
