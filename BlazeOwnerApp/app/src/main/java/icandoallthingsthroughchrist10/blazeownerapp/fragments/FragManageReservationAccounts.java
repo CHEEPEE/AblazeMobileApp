@@ -112,7 +112,10 @@ public class FragManageReservationAccounts extends Fragment {
                     public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
                         reservationTicketObjectModels.clear();
                         for (DocumentSnapshot documentSnapshot:queryDocumentSnapshots.getDocuments()){
-                            reservationTicketObjectModels.add(documentSnapshot.toObject(ReservationTicketObjectModel.class));
+                            ReservationTicketObjectModel reservationTicketObjectModel = documentSnapshot.toObject(ReservationTicketObjectModel.class);
+                            if (!reservationTicketObjectModel.getStatus().equals("blocked")){
+                                reservationTicketObjectModels.add(reservationTicketObjectModel);
+                            }
                         }
                         ticketsRecyclerViewAdapter.notifyDataSetChanged();
                     }

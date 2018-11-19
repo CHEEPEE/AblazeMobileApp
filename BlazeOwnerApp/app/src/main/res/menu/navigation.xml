@@ -11,4 +11,9 @@
         android:icon="@drawable/ic_dashboard_black_24dp"
         android:title="Manage Tenants" />
 
+    <item
+        android:id="@+id/navigation_blocked"
+        android:icon="@drawable/ic_block_black_24dp"
+        android:title="Blocked Tenants" />
+
 </menu>

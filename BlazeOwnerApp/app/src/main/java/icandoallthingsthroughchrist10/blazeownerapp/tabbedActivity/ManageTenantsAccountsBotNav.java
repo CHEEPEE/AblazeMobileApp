@@ -16,6 +16,7 @@ import android.widget.TextView;
 import icandoallthingsthroughchrist10.blazeownerapp.R;
 
 import icandoallthingsthroughchrist10.blazeownerapp.fragmentAdapter.ViewPagerAdapter;
+import icandoallthingsthroughchrist10.blazeownerapp.fragments.FragManageBlackListAccounts;
 import icandoallthingsthroughchrist10.blazeownerapp.fragments.FragManageReservationAccounts;
 import icandoallthingsthroughchrist10.blazeownerapp.fragments.FragManageCandiddatesTenantsTickets;
 
@@ -31,6 +32,7 @@ public class ManageTenantsAccountsBotNav extends AppCompatActivity {
     String classKey;
     FragManageCandiddatesTenantsTickets fragManageCandiddatesTenantsTickets;
     FragManageReservationAccounts fragManageReservationAccounts;
+    FragManageBlackListAccounts fragManageBlackListAccounts;
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -45,6 +47,8 @@ public class ManageTenantsAccountsBotNav extends AppCompatActivity {
                 case R.id.navigation_dashboard:
                     viewPager.setCurrentItem(1);
                     return true;
+                case R.id.navigation_blocked:
+                    viewPager.setCurrentItem(2);
             }
             return false;
         }
@@ -102,8 +106,10 @@ public class ManageTenantsAccountsBotNav extends AppCompatActivity {
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
         fragManageCandiddatesTenantsTickets = new FragManageCandiddatesTenantsTickets();
         fragManageReservationAccounts = new FragManageReservationAccounts();
+        fragManageBlackListAccounts = new FragManageBlackListAccounts();
         adapter.addFragment(fragManageCandiddatesTenantsTickets);
         adapter.addFragment(fragManageReservationAccounts);
+        adapter.addFragment(fragManageBlackListAccounts);
 
         viewPager.setAdapter(adapter);
     }
