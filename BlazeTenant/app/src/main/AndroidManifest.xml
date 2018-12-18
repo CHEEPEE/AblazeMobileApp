@@ -37,7 +37,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".BookingHistory"></activity>
+        <activity android:name=".BookingHistory" />
+        <activity android:name=".activity.TermsAndConditions"></activity>
     </application>
 
 </manifest>

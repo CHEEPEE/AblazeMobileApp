@@ -728,10 +728,6 @@ public class ManageBoardingHouse extends AppCompatActivity{
 
     void nameChangeRequest(){
         final Dialog dialog = new Dialog(ManageBoardingHouse.this);
-
-
-
-
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.dlg_new_name);

@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,10 +29,6 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
-import org.w3c.dom.Text;
-
-import java.util.Set;
-
 import javax.annotation.Nullable;
 
 import icandoallthingsthroughchrist10.blazeownerapp.objectModel.UserProfileObjectModel;
@@ -44,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private TextView getstarted;
+    private CheckBox termsAndConditions;
 
     @Override
     protected void onStart() {
@@ -58,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        termsAndConditions = (CheckBox) findViewById(R.id.termsAndConditions);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.web_client))
@@ -71,11 +70,22 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         getstarted = (TextView) findViewById(R.id.getstarted);
 
+        findViewById(R.id.viewTermsAndConditions).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(LoginActivity.this,TermsAndConditions.class);
+                startActivity(i);
+            }
+        });
         getstarted.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loading(true);
-                signIn();
+                if (termsAndConditions.isChecked()){
+                    loading(true);
+                    signIn();
+                }else {
+                    Toast.makeText(LoginActivity.this,"Should agree with term and condition first",Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -98,9 +108,6 @@ public class LoginActivity extends AppCompatActivity {
                 mAuth = FirebaseAuth.getInstance();
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account);
-
-
-
 
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately

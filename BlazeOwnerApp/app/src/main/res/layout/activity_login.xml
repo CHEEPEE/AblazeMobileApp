@@ -52,7 +52,7 @@
         style="@style/defaultButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/button_background"
         android:elevation="5dp"
         android:fontFamily="@font/lato_light"
@@ -61,7 +61,20 @@
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/termsAndConditions" />
+
+    <TextView
+        android:id="@+id/viewTermsAndConditions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="View tems and conditions"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/termsAndConditions"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
     <TextView
@@ -73,4 +86,16 @@
         app:layout_constraintEnd_toEndOf="@+id/loadingIndicator"
         app:layout_constraintStart_toStartOf="@+id/loadingIndicator"
         app:layout_constraintTop_toBottomOf="@+id/loadingIndicator" />
+
+    <CheckBox
+        android:id="@+id/termsAndConditions"
+        android:layout_width="wrap_content"
+        android:layout_height="34dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="62dp"
+        android:text="Agree to terms and Conditions?"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/statusLabel" />
 </android.support.constraint.ConstraintLayout>

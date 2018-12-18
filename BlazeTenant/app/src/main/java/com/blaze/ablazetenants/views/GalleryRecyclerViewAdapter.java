@@ -26,6 +26,7 @@ public class GalleryRecyclerViewAdapter
     private String categoryKey;
     private String businessKey;
 
+
     public class MyViewHolder extends RecyclerView.ViewHolder{
       public ImageView addImage;
       public ImageView galleryImage;
